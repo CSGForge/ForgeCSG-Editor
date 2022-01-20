@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Generate make files",
+            "type": "process",
+            "command": "premake5",
+            "args": [
+                "gmake2"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "make",
+            "args": [
+                "-C",
+                "${cwd}/build",
+                "config=${input:buildConfig}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["Generate make files"],
+            "presentation": {
+                "reveal": "silent",
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "buildConfig",
+            "type": "pickString",
+            "description": "Configuration",
+            "options": ["debug", "release"],
+            "default": "debug"
+        },
+    ]
+}
