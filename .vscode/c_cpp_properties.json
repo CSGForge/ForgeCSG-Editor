@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/libs/imgui/**",
                 "${workspaceFolder}/libs/bgfx/include/**",
                 "${workspaceFolder}/libs/bx/include/**",
                 "${workspaceFolder}/libs/glfw/include/**"

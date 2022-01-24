@@ -19,8 +19,9 @@ project "CSGForge-Editor"
     targetdir("bin/%{cfg.buildcfg}")
 
     includedirs {"libs/bgfx/include", "libs/bx/include", "libs/glfw/include"}
+    includedirs {"libs/bgfx/include", "libs/bx/include", "libs/glfw/include", "libs/imgui"}
     files {"src/**.hpp", "src/**.cpp"}
-    links {"bgfx", "bimg", "bx", "glfw"}
+    links {"bgfx", "bimg", "bx", "glfw", "imgui"}
     filter "system:linux"
 		links { "dl", "GL", "pthread", "X11" }
 
@@ -28,3 +29,4 @@ include "libs/bgfx.lua"
 include "libs/bimg.lua"
 include "libs/bx.lua"
 include "libs/glfw.lua"
+include "libs/imgui.lua"
