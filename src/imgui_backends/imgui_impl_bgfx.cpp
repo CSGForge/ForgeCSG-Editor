@@ -18,7 +18,7 @@ static bgfx::VertexLayout g_VertexLayout;
 // Note: If text or lines are blurry when integrating ImGui into your engine,
 // in your Render function, try translating your projection matrix by
 // (0.5f,0.5f) or (0.375f,0.375f)
-void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
+void ImGui_Implbgfx_RenderDrawData(ImDrawData* draw_data)
 {
     // Avoid rendering when minimized, scale coordinates for retina displays
     // (screen coordinates != framebuffer coordinates)
