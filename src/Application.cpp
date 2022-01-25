@@ -4,6 +4,7 @@
 #include <bgfx/bgfx.h>
 
 #include "ImGuiManager.hpp"
+#include "Panels/ViewportPanel.hpp"
 
 namespace ForgeEditor
 {
@@ -31,6 +32,7 @@ namespace ForgeEditor
     void Application::Run()
     {
         auto imguiManager = new ImGuiManager(mWindow->GetNativeWindow());
+        auto viewport_panel = new ViewportPanel();
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {
@@ -41,6 +43,7 @@ namespace ForgeEditor
             // TODO: Move Dear ImGui stuff
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
             ImGui::ShowDemoWindow();
+            viewport_panel->Render();
 
             imguiManager->EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
