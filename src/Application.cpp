@@ -2,9 +2,11 @@
 
 #include <imgui/imgui.h>
 #include <bgfx/bgfx.h>
+#include <CSGForge-Core/csg.hpp>
 
 #include "ImGuiManager.hpp"
 #include "Panels/ViewportPanel.hpp"
+#include "Panels/BrushManagerPanel.hpp"
 
 namespace ForgeEditor
 {
@@ -31,22 +33,24 @@ namespace ForgeEditor
 
     void Application::Run()
     {
+        auto world = new ForgeCore::World();
         auto imguiManager = new ImGuiManager(mWindow->GetNativeWindow());
         auto viewport_panel = new ViewportPanel();
+        auto brush_manager_panel = new BrushManagerPanel(world);
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {
             imguiManager->BeginFrame();
 
-            bgfx::touch(0);
-
             // TODO: Move Dear ImGui stuff
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
             ImGui::ShowDemoWindow();
             viewport_panel->Render();
+            brush_manager_panel->Render();
 
             imguiManager->EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
+            world->Update();
             mWindow->Update();
         }
         delete imguiManager;

@@ -15,7 +15,7 @@ workspace "CSGForge-Editor"
 project "CSGForge-Editor"
     kind "WindowedApp"
     language "C++"
-    cppdialect "C++14"
+    cppdialect "C++20"
     targetdir("bin/%{cfg.buildcfg}")
 
     -- Hacky having to include+link cbop
