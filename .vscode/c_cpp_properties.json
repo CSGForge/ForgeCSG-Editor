@@ -7,7 +7,8 @@
                 "${workspaceFolder}/libs/imgui/**",
                 "${workspaceFolder}/libs/bgfx/include/**",
                 "${workspaceFolder}/libs/bx/include/**",
-                "${workspaceFolder}/libs/glfw/include/**"
+                "${workspaceFolder}/libs/glfw/include/**",
+                "${workspaceFolder}/libs/CSGForge-Core/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
