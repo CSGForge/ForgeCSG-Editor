@@ -8,12 +8,12 @@ namespace ForgeEditor
     {
     public:
         BrushManagerPanel(ForgeCore::World *world);
-        ~BrushManagerPanel();
+        ~BrushManagerPanel() = default;
 
         void Render();
 
     private:
-        int mSelected = -1;
+        int mSelected;
         ForgeCore::Brush *mSelectedBrush;
         ForgeCore::World *mWorld;
     };

@@ -19,8 +19,9 @@ namespace ForgeEditor
     BrushManagerPanel::BrushManagerPanel(ForgeCore::World *world)
     {
         mWorld = world;
+        mSelectedBrush = nullptr;
+        mSelected = -1;
     }
-    BrushManagerPanel::~BrushManagerPanel() {}
 
     void BrushManagerPanel::Render()
     {

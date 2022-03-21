@@ -33,26 +33,25 @@ namespace ForgeEditor
 
     void Application::Run()
     {
-        auto world = new ForgeCore::World();
-        auto imguiManager = new ImGuiManager(mWindow->GetNativeWindow());
-        auto viewport_panel = new ViewportPanel();
-        auto brush_manager_panel = new BrushManagerPanel(world);
+        auto world = ForgeCore::World();
+        auto imguiManager = ImGuiManager(mWindow->GetNativeWindow());
+        auto viewport_panel = ViewportPanel();
+        auto brush_manager_panel = BrushManagerPanel(&world);
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {
-            imguiManager->BeginFrame();
+            imguiManager.BeginFrame();
 
             // TODO: Move Dear ImGui stuff
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
             ImGui::ShowDemoWindow();
-            viewport_panel->Render();
-            brush_manager_panel->Render();
+            viewport_panel.Render();
+            brush_manager_panel.Render();
 
-            imguiManager->EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
+            imguiManager.EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
-            world->Update();
+            world.Update();
             mWindow->Update();
         }
-        delete imguiManager;
     }
 }
