@@ -17,7 +17,7 @@ namespace ForgeEditor
     }
 
     void ViewportPanel::Render()
-    {   
+    {
         bgfx::touch(1); // Makes sure this view is rendered even if nothing is submitted for drawing
         if (ImGui::Begin("Viewport") && ImGui::BeginChild("Framebuffer"))
         {

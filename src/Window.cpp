@@ -46,7 +46,7 @@ namespace ForgeEditor
         init.resolution.width = mWidth;
         init.resolution.height = mHeight;
         init.resolution.reset = BGFX_RESET_VSYNC;
-        init.type = bgfx::RendererType::Count;
+        init.type = bgfx::RendererType::OpenGL; // Would be nice to be able to use whatever
         if (!bgfx::init(init))
             ; // TODO: ERROR!
 
