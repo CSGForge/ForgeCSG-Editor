@@ -4,6 +4,11 @@
 
 namespace ForgeEditor
 {
+    MainMenuBarPanel::MainMenuBarPanel()
+    {
+        SetName("Main Menu Bar");
+    }
+
     void MainMenuBarPanel::Render()
     {
         ImGui::BeginMainMenuBar();

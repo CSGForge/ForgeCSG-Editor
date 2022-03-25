@@ -4,10 +4,13 @@
 
 #include "imgui_backends/imgui_impl_glfw.hpp"
 #include "imgui_backends/imgui_impl_bgfx.hpp"
+#include "Panels/ViewportPanel.hpp"
+#include "Panels/BrushManagerPanel.hpp"
+#include "Panels/MainMenuBarPanel.hpp"
 
 namespace ForgeEditor
 {
-    ImGuiManager::ImGuiManager(GLFWwindow *window)
+    ImGuiManager::ImGuiManager(GLFWwindow *window, ForgeCore::World *world)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -23,6 +26,10 @@ namespace ForgeEditor
         // Setup Platform/Renderer bindings
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_Implbgfx_Init(255);
+
+        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
+        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world)));
+        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel()));
     }
 
     ImGuiManager::~ImGuiManager()
@@ -37,6 +44,13 @@ namespace ForgeEditor
         ImGui_ImplGlfw_NewFrame();
         ImGui_Implbgfx_NewFrame();
         ImGui::NewFrame();
+    }
+
+    void ImGuiManager::RenderPanels()
+    {
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+        for (auto &&panel : mPanels)
+            panel->Render();
     }
 
     void ImGuiManager::EndFrame(uint32_t width, uint32_t height)

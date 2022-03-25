@@ -21,11 +21,15 @@ namespace ForgeEditor
         mWorld = world;
         mSelectedBrush = nullptr;
         mSelected = -1;
+        SetName("Brush Manager");
     }
 
     void BrushManagerPanel::Render()
     {
-        ImGui::Begin("Brush Manager");
+        bool visible = GetVisibility();
+        if (!visible)
+            return;
+        ImGui::Begin(GetName().c_str(), &visible);
 
         static std::vector<ForgeCore::Plane> planes;
         ImGui::BeginGroup();
@@ -114,5 +118,6 @@ namespace ForgeEditor
         }
         ImGui::EndChild();
         ImGui::End();
+        SetVisibility(visible);
     }
 }

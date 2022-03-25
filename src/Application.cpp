@@ -10,9 +10,6 @@
 
 #include "Camera.hpp"
 #include "ImGuiManager.hpp"
-#include "Panels/ViewportPanel.hpp"
-#include "Panels/BrushManagerPanel.hpp"
-#include "Panels/MainMenuBarPanel.hpp"
 #include "Mesh.hpp"
 
 namespace ForgeEditor
@@ -65,10 +62,7 @@ namespace ForgeEditor
     void Application::Run()
     {
         auto world = ForgeCore::World();
-        auto imguiManager = ImGuiManager(mWindow->GetNativeWindow());
-        auto viewport_panel = ViewportPanel();
-        auto brush_manager_panel = BrushManagerPanel(&world);
-        auto main_menu_bar_panel = MainMenuBarPanel();
+        auto imguiManager = ImGuiManager(mWindow->GetNativeWindow(), &world);
         auto mesh = buildMesh(world);
         Camera camera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
 
@@ -82,10 +76,7 @@ namespace ForgeEditor
             mesh.Render(0);
 
             imguiManager.BeginFrame();
-            ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-            // viewport_panel.Render();
-            brush_manager_panel.Render();
-            main_menu_bar_panel.Render();
+            imguiManager.RenderPanels();
             imguiManager.EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
             auto start = clock();

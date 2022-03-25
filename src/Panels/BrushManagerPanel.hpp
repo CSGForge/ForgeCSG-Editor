@@ -2,15 +2,17 @@
 
 #include <CSGForge-Core/csg.hpp>
 
+#include "BasePanel.hpp"
+
 namespace ForgeEditor
 {
-    class BrushManagerPanel
+    class BrushManagerPanel : BasePanel
     {
     public:
         BrushManagerPanel(ForgeCore::World *world);
         ~BrushManagerPanel() = default;
 
-        void Render();
+        void Render() override;
 
     private:
         int mSelected;

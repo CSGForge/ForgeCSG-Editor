@@ -1,14 +1,16 @@
 #pragma once
 
+#include "BasePanel.hpp"
+
 namespace ForgeEditor
 {
-    class MainMenuBarPanel
+    class MainMenuBarPanel : BasePanel
     {
     public:
-        MainMenuBarPanel() = default;
+        MainMenuBarPanel();
         ~MainMenuBarPanel() = default;
 
-        void Render();
+        void Render() override;
 
     private:
     };

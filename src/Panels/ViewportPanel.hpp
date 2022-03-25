@@ -2,15 +2,17 @@
 
 #include <bgfx/bgfx.h>
 
+#include "BasePanel.hpp"
+
 namespace ForgeEditor
 {
-    class ViewportPanel
+    class ViewportPanel : BasePanel
     {
     public:
         ViewportPanel();
         ~ViewportPanel();
 
-        void Render();
+        void Render() override;
 
     private:
         bgfx::FrameBufferHandle mFramebufferHandle;
