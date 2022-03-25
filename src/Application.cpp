@@ -8,6 +8,7 @@
 #include <bx/math.h>
 #include <CSGForge-Core/csg.hpp>
 
+#include "Camera.hpp"
 #include "ImGuiManager.hpp"
 #include "Panels/ViewportPanel.hpp"
 #include "Panels/BrushManagerPanel.hpp"
@@ -67,30 +68,21 @@ namespace ForgeEditor
         auto viewport_panel = ViewportPanel();
         auto brush_manager_panel = BrushManagerPanel(&world);
         auto mesh = buildMesh(world);
+        Camera camera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
 
-        int counter = 0;
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {
             bgfx::touch(0);
 
-            float view[16];
-            bx::mtxLookAt(view, {0.0f, 0.0f, -10.0f}, {0.0f, 0.0f, 0.0f});
-            float proj[16];
-            bx::mtxProj(proj, 60.0f, float(1280) / float(720), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
-            bgfx::setViewTransform(0, view, proj);
-            float mtx[16];
-            bx::mtxRotateXY(mtx, counter * 0.01f, counter * 0.01f);
-            bgfx::setTransform(mtx);
+            camera.Update(mWindow);
+            camera.SetView(0);
 
             mesh.Render(0);
 
             imguiManager.BeginFrame();
-
-            // TODO: Move Dear ImGui stuff
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
             // viewport_panel.Render();
             brush_manager_panel.Render();
-
             imguiManager.EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
             auto start = clock();
@@ -102,7 +94,6 @@ namespace ForgeEditor
                 printf("Update took %.3f seconds\n", (end - start) / (double)CLOCKS_PER_SEC);
             }
             mWindow->Update();
-            counter++;
         }
     }
 }
