@@ -4,6 +4,7 @@
 
 #include <bgfx/bgfx.h>
 #include <imgui/imgui.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace ForgeEditor
 {
@@ -43,11 +44,10 @@ namespace ForgeEditor
             cursor_movement -= mCursorPosition;
 
             // Mouse changes mForward
-            // - mdx = rotation around y axis
-            // - mdy = rotation around x axis
+            // TODO: This is buggy :)
             const float m_ms = -0.01f;
             const float mdx = cursor_movement.x * m_ms;
-            const float mdy = cursor_movement.y * m_ms;
+            const float mdy = cursor_movement.y * (mForward.z > 0 ? m_ms : -m_ms);
             const float sx = sin(mdy);
             const float cx = cos(mdy);
             const float sy = sin(mdx);
@@ -57,25 +57,28 @@ namespace ForgeEditor
             mForward /= glm::length(mForward);
 
             // KB changes mEye
+            auto right = glm::cross(mUp, mForward);
+            auto up = glm::cross(mForward, right);
             glm::vec3 d_eye(0.0f);
             if (glfwGetKey(native_window, GLFW_KEY_W) == GLFW_PRESS)
-                d_eye.z += 1.0f;
+                d_eye += mForward;
             if (glfwGetKey(native_window, GLFW_KEY_A) == GLFW_PRESS)
-                d_eye.x -= 1.0f;
+                d_eye -= right;
             if (glfwGetKey(native_window, GLFW_KEY_S) == GLFW_PRESS)
-                d_eye.z -= 1.0f;
+                d_eye -= mForward;
             if (glfwGetKey(native_window, GLFW_KEY_D) == GLFW_PRESS)
-                d_eye.x += 1.0f;
+                d_eye += right;
             if (glfwGetKey(native_window, GLFW_KEY_Q) == GLFW_PRESS)
-                d_eye.y += 1.0f;
+                d_eye += up;
             if (glfwGetKey(native_window, GLFW_KEY_E) == GLFW_PRESS)
-                d_eye.y -= 1.0f;
+                d_eye -= up;
+
+            // Normalise speed
             if (glm::length(d_eye) != 0)
                 d_eye /= glm::length(d_eye);
-            // TODO: Move relative to forward direction
 
             float ms = 0.5f;
-            mEye += d_eye * ms;
+            mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
 
             glfwSetCursorPos(native_window, mCursorPosition.x, mCursorPosition.y);
         }
