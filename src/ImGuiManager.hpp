@@ -19,9 +19,10 @@ namespace ForgeEditor
         static void BeginFrame();
         void RenderPanels();
         static void EndFrame(uint32_t width, uint32_t height);
+        std::vector<std::shared_ptr<BasePanel>> &GetPanels();
 
     private:
-        std::vector<std::unique_ptr<BasePanel>> mPanels;
+        std::vector<std::shared_ptr<BasePanel>> mPanels;
     };
 
 }

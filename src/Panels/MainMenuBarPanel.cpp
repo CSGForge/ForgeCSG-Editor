@@ -4,9 +4,10 @@
 
 namespace ForgeEditor
 {
-    MainMenuBarPanel::MainMenuBarPanel()
+    MainMenuBarPanel::MainMenuBarPanel(ImGuiManager *imGuiManager)
     {
         SetName("Main Menu Bar");
+        mImGuiManager = imGuiManager;
     }
 
     void MainMenuBarPanel::Render()
@@ -69,14 +70,21 @@ namespace ForgeEditor
             if (ImGui::MenuItem("Reset UI"))
                 ;
             ImGui::Separator();
-            if (ImGui::MenuItem("Viewport", "Ctrl+Alt+1", true))
-                ;
-            if (ImGui::MenuItem("World Editor", "Ctrl+Alt+2", false))
-                ;
-            if (ImGui::MenuItem("Brush Editor", "Ctrl+Alt+3", true))
-                ;
-            if (ImGui::MenuItem("Console", "Ctrl+Alt+4", false))
-                ;
+            auto panels = mImGuiManager->GetPanels();
+            for (int i = 0; i < panels.size(); i++)
+            {
+                auto panel = panels[i].get();
+                if (panel == this)
+                    continue;
+
+                bool visible = panel->GetVisibility();
+                ImGui::MenuItem(panel->GetName().c_str(), ("Ctrl+Alt+" + std::to_string(i + 1)).c_str(), &visible);
+                panel->SetVisibility(visible);
+            }
+            // if (ImGui::MenuItem("World Editor", "Ctrl+Alt+2", false))
+            //     ;
+            // if (ImGui::MenuItem("Console", "Ctrl+Alt+4", false))
+            //     ;
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Help"))

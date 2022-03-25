@@ -27,9 +27,9 @@ namespace ForgeEditor
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_Implbgfx_Init(255);
 
-        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
-        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world)));
-        mPanels.emplace_back(std::unique_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel()));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world)));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel(this)));
     }
 
     ImGuiManager::~ImGuiManager()
@@ -60,5 +60,10 @@ namespace ForgeEditor
 
         ImGui::Render();
         ImGui_Implbgfx_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    std::vector<std::shared_ptr<BasePanel>> &ImGuiManager::GetPanels()
+    {
+        return mPanels;
     }
 }
