@@ -44,7 +44,7 @@ namespace ForgeEditor
         return handle;
     }
 
-    Model::Model(ForgeCore::World world)
+    Model::Model(ForgeCore::World *world)
     {
         // Shader related stuffs
         mVertexLayout.begin()
@@ -55,8 +55,20 @@ namespace ForgeEditor
         mFsh = loadShader("res/shaders/glsl/fs_cubes.bin", "Fragment Shader");
         mProgram = bgfx::createProgram(mVsh, mFsh, true);
 
-        // Build the meshes
-        for (auto b : world.GetBrushes())
+        Rebuild(world);
+    }
+
+    Model::~Model()
+    {
+        bgfx::destroy(mVsh);
+        bgfx::destroy(mFsh);
+        bgfx::destroy(mProgram);
+    }
+
+    void Model::Rebuild(ForgeCore::World *world)
+    {
+        mMeshes.clear();
+        for (auto b : world->GetBrushes())
         {
             std::vector<MeshVertex> mesh_vs;
             std::vector<unsigned int> mesh_is;

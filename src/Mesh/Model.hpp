@@ -1,7 +1,10 @@
 #pragma once
 
+#include <string>
 #include <vector>
+#include <memory>
 
+#include <assimp/scene.h>
 #include <CSGForge-Core/csg.hpp>
 
 #include "Mesh.hpp"
@@ -11,10 +14,11 @@ namespace ForgeEditor
     class Model
     {
     public:
-        Model(ForgeCore::World world);
-        ~Model() = default;
+        Model(ForgeCore::World *world);
+        ~Model();
 
         void Render(int view);
+        void Rebuild(ForgeCore::World *world);
 
     private:
         std::vector<Mesh> mMeshes;

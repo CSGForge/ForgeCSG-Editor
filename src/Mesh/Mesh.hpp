@@ -13,7 +13,7 @@ namespace ForgeEditor
     {
     public:
         Mesh(const std::vector<MeshVertex> &vertices, const std::vector<unsigned int> &indices, bgfx::VertexLayout vertexLayout);
-        ~Mesh() = default;
+        ~Mesh() = default; // TODO: Delete buffers
 
         void Render(int view, bgfx::ProgramHandle program);
 
