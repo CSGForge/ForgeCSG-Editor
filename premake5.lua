@@ -19,15 +19,26 @@ project "CSGForge-Editor"
     targetdir("bin/%{cfg.buildcfg}")
 
     -- Hacky having to include+link cbop
-    includedirs {"libs/bgfx/include", "libs/bx/include", "libs/glfw/include", "libs/imgui", "libs/CSGForge-Core/include", "libs/CSGForge-Core/libs/cbop"}
+    includedirs {
+        "libs/bgfx/include",
+        "libs/bx/include",
+        "libs/glfw/include",
+        "libs/imgui",
+        "libs/CSGForge-Core/include",
+        "libs/CSGForge-Core/libs/cbop",
+        "libs/assimp/include",
+        -- "libs/assimp/_config_headers",
+        -- "libs/assimp/_config_headers/assimp"
+    }
     files {"src/**.hpp", "src/**.cpp"}
-    links {"CSGForge-Core", "bgfx", "bimg", "bx", "glfw", "imgui", "cbop"}
+    links {"CSGForge-Core", "bgfx", "bimg", "bx", "glfw", "imgui", "cbop", "assimp"}
     filter "system:linux"
 		links { "dl", "GL", "pthread", "X11" }
 
 filter {}
 include "libs/CSGForge-Core"
 include "libs/CSGForge-Core/libs/cbop.lua"
+include "libs/assimp.lua"
 include "libs/bgfx.lua"
 include "libs/bimg.lua"
 include "libs/bx.lua"
