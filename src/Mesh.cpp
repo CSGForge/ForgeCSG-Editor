@@ -64,9 +64,10 @@ namespace ForgeEditor
 
         mIbh = bgfx::createIndexBuffer(bgfx::makeRef(i_array, in * sizeof(uint16_t)));
 
-        mVsh = loadShader("shaders/glsl/vs_cubes.bin", "Vertex Shader");
-        mFsh = loadShader("shaders/glsl/fs_cubes.bin", "Fragment Shader");
+        mVsh = loadShader("res/shaders/glsl/vs_cubes.bin", "Vertex Shader");
+        mFsh = loadShader("res/shaders/glsl/fs_cubes.bin", "Fragment Shader");
         mProgram = bgfx::createProgram(mVsh, mFsh, true);
+        std::cout << bgfx::isValid(mVsh) << std::endl;
     }
 
     // Mesh::~Mesh()
