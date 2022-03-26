@@ -1,4 +1,4 @@
-#include "Mesh.hpp"
+#include "Model.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -44,43 +44,41 @@ namespace ForgeEditor
         return handle;
     }
 
-    Mesh::Mesh(const std::vector<MeshVertex> &vertices, const std::vector<unsigned int> &indices)
+    Model::Model(ForgeCore::World world)
     {
+        // Shader related stuffs
         mVertexLayout.begin()
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
-
-        int vn = vertices.size();
-        MeshVertex *v_array = (MeshVertex *)malloc(vn * sizeof(MeshVertex));
-        for (int i = 0; i < vn; i++)
-            v_array[i] = vertices[i];
-        mVbh = bgfx::createVertexBuffer(bgfx::makeRef(v_array, vn * sizeof(MeshVertex)), mVertexLayout);
-
-        int in = indices.size();
-        uint16_t *i_array = (uint16_t *)malloc(in * (sizeof(uint16_t)));
-        for (int i = 0; i < in; i++)
-            i_array[i] = indices[i];
-
-        mIbh = bgfx::createIndexBuffer(bgfx::makeRef(i_array, in * sizeof(uint16_t)));
-
         mVsh = loadShader("res/shaders/glsl/vs_cubes.bin", "Vertex Shader");
         mFsh = loadShader("res/shaders/glsl/fs_cubes.bin", "Fragment Shader");
         mProgram = bgfx::createProgram(mVsh, mFsh, true);
-        std::cout << bgfx::isValid(mVsh) << std::endl;
+
+        // Build the meshes
+        for (auto b : world.GetBrushes())
+        {
+            std::vector<MeshVertex> mesh_vs;
+            std::vector<unsigned int> mesh_is;
+            unsigned int offset = 0;
+            for (auto f : b->GetFaces())
+            {
+                uint32_t colour = (255 << 24) + ((rand() % 256) << 16) + ((rand() % 256) << 8) + (rand() % 256);
+
+                auto vs = f.GetTriangleVertices();
+                for (auto v : vs)
+                    mesh_vs.push_back({v, colour});
+                for (auto i : f.GetIndices())
+                    mesh_is.push_back(i + offset);
+                offset += vs.size();
+            }
+            mMeshes.push_back(Mesh(mesh_vs, mesh_is, mVertexLayout));
+        }
     }
 
-    // Mesh::~Mesh()
-    // {
-    //     // bgfx::destroy(mProgram);
-    //     // bgfx::destroy(mVbh); // TODO: Work out why this makes it die
-    //     // bgfx::destroy(mIbh);
-    // }
-
-    void Mesh::Render(int view)
+    void Model::Render(int view)
     {
-        bgfx::setVertexBuffer(0, mVbh);
-        bgfx::setIndexBuffer(mIbh);
-        bgfx::submit(view, mProgram);
+        for (auto mesh : mMeshes)
+            mesh.Render(view, mProgram);
     }
 }

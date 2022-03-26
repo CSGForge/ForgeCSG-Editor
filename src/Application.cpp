@@ -10,35 +10,11 @@
 
 #include "Camera.hpp"
 #include "ImGuiManager.hpp"
-#include "Mesh.hpp"
+#include "Mesh/Model.hpp"
 
 namespace ForgeEditor
 {
     Application *Application::sInstance = nullptr;
-
-    Mesh buildMesh(ForgeCore::World world)
-    {
-        std::vector<MeshVertex> mesh_vs;
-        std::vector<unsigned int> mesh_is;
-
-        unsigned int offset = 0;
-        for (auto b : world.GetBrushes())
-        {
-            for (auto f : b->GetFaces())
-            {
-                uint32_t colour = (255 << 24) + ((rand() % 256) << 16) + ((rand() % 256) << 8) + (rand() % 256);
-
-                auto vs = f.GetTriangleVertices();
-                for (auto v : vs)
-                    mesh_vs.push_back({v, colour});
-                for (auto i : f.GetIndices())
-                    mesh_is.push_back(i + offset);
-                offset += vs.size();
-            }
-        }
-
-        return Mesh(mesh_vs, mesh_is);
-    }
 
     Application::Application()
     {
@@ -63,7 +39,7 @@ namespace ForgeEditor
     {
         auto world = ForgeCore::World();
         auto imguiManager = ImGuiManager(mWindow->GetNativeWindow(), &world);
-        auto mesh = buildMesh(world);
+        auto model = Model(world);
         Camera camera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
@@ -72,8 +48,7 @@ namespace ForgeEditor
 
             camera.Update(mWindow);
             camera.SetView(0);
-
-            mesh.Render(0);
+            model.Render(0);
 
             imguiManager.BeginFrame();
             imguiManager.RenderPanels();
@@ -83,7 +58,7 @@ namespace ForgeEditor
             world.Update();
             if (world.Modified())
             {
-                mesh = buildMesh(world);
+                model = Model(world);
                 auto end = clock();
                 printf("Update took %.3f seconds\n", (end - start) / (double)CLOCKS_PER_SEC);
             }
