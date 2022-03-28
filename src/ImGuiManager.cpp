@@ -10,7 +10,7 @@
 
 namespace ForgeEditor
 {
-    ImGuiManager::ImGuiManager(GLFWwindow *window, ForgeCore::World *world)
+    ImGuiManager::ImGuiManager(GLFWwindow *window, WorldManager *world_manager)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -28,8 +28,8 @@ namespace ForgeEditor
         ImGui_Implbgfx_Init(255);
 
         mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world)));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel(this)));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world_manager->GetWorld())));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel(this, world_manager)));
     }
 
     ImGuiManager::~ImGuiManager()
@@ -49,6 +49,7 @@ namespace ForgeEditor
     void ImGuiManager::RenderPanels()
     {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+        ImGui::ShowDemoWindow();
         for (auto &&panel : mPanels)
             panel->Render();
     }

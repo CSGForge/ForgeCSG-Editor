@@ -35,7 +35,7 @@ namespace ForgeEditor
     void Application::Run()
     {
         auto world_manager = WorldManager();
-        auto imgui_manager = ImGuiManager(mWindow->GetNativeWindow(), world_manager.GetWorld());
+        auto imgui_manager = ImGuiManager(mWindow->GetNativeWindow(), &world_manager);
         Camera camera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))

@@ -4,10 +4,11 @@
 
 namespace ForgeEditor
 {
-    MainMenuBarPanel::MainMenuBarPanel(ImGuiManager *imGuiManager)
+    MainMenuBarPanel::MainMenuBarPanel(ImGuiManager *imGuiManager, WorldManager *world_manager)
     {
         SetName("Main Menu Bar");
         mImGuiManager = imGuiManager;
+        mWorldManager = world_manager;
     }
 
     void MainMenuBarPanel::Render()
@@ -30,7 +31,7 @@ namespace ForgeEditor
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
                 ;
             if (ImGui::MenuItem("Export", "Ctrl+Shift+E"))
-                ;
+                mWorldManager->Export("output/world.fbx");
             ImGui::Separator();
             if (ImGui::MenuItem("Quit", "Ctrl+Q"))
                 ;

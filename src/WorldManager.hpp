@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <assimp/scene.h>
 #include <CSGForge-Core/csg.hpp>
 
@@ -15,7 +17,7 @@ namespace ForgeEditor
 
         void Update();
         void Render(int view);
-        // void Export(std::string path);
+        void Export(std::string path);
         ForgeCore::World *GetWorld();
 
     private:
@@ -23,6 +25,6 @@ namespace ForgeEditor
         aiScene *mAiScene;
         Model *mModel;
 
-        // void BuildAiScene();
+        void BuildAiScene();
     };
 }

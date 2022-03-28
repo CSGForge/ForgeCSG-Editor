@@ -4,16 +4,16 @@
 #include <memory>
 
 #include <GLFW/glfw3.h>
-#include <CSGForge-Core/csg.hpp>
 
 #include "Panels/BasePanel.hpp"
+#include "WorldManager.hpp"
 
 namespace ForgeEditor
 {
     class ImGuiManager
     {
     public:
-        ImGuiManager(GLFWwindow *window, ForgeCore::World *world);
+        ImGuiManager(GLFWwindow *window, WorldManager *world_manager);
         ~ImGuiManager();
 
         static void BeginFrame();

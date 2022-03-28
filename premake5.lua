@@ -27,6 +27,8 @@ project "CSGForge-Editor"
         "libs/CSGForge-Core/include",
         "libs/CSGForge-Core/libs/cbop",
         "libs/assimp/include",
+        "libs/assimp/include/assimp",
+        "libs/assimp/code/",
         -- "libs/assimp/_config_headers",
         -- "libs/assimp/_config_headers/assimp"
     }
