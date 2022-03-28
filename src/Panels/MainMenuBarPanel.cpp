@@ -1,6 +1,7 @@
 #include "MainMenuBarPanel.hpp"
 
 #include <imgui/imgui.h>
+#include <portable-file-dialogs.h>
 
 namespace ForgeEditor
 {
@@ -31,7 +32,11 @@ namespace ForgeEditor
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
                 ;
             if (ImGui::MenuItem("Export", "Ctrl+Shift+E"))
-                mWorldManager->Export("output/world.fbx");
+            {
+                auto selection = pfd::save_file("Export World...", ".fbx", {"FBX/OBJ", "*.obj *.fbx"}).result();
+                if (!selection.empty())
+                    mWorldManager->Export(selection);
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Quit", "Ctrl+Q"))
                 ;

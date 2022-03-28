@@ -20,3 +20,6 @@
 [submodule "libs/assimp"]
 	path = libs/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "libs/portable-file-dialogs"]
+	path = libs/portable-file-dialogs
+	url = https://github.com/samhocevar/portable-file-dialogs.git

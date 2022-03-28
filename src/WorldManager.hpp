@@ -24,7 +24,7 @@ namespace ForgeEditor
         ForgeCore::World *mWorld;
         aiScene *mAiScene;
         Model *mModel;
-        bool mSceneNeedsRebuild = false;
+        bool mSceneNeedsRebuild = true;
 
         void BuildAiScene();
     };
