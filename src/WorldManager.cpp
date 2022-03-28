@@ -16,7 +16,10 @@ namespace ForgeEditor
     {
         mWorld->Update();
         if (mWorld->Modified())
+        {
             mModel->Rebuild(mWorld);
+            mSceneNeedsRebuild = true;
+        }
     }
 
     void WorldManager::Render(int view)
@@ -31,8 +34,13 @@ namespace ForgeEditor
 
     void WorldManager::Export(std::string path)
     {
-        if (mAiScene == nullptr)
+        if (mSceneNeedsRebuild)
+        {
+            if (mAiScene != nullptr)
+                free(mAiScene);
             BuildAiScene();
+            mSceneNeedsRebuild = false;
+        }
 
         // Export stuff
         Assimp::Exporter exporter;
