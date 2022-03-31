@@ -45,25 +45,17 @@ namespace ForgeEditor
 
             // Rotation angles
             const float m_ms = 0.01f;
-            float x_angle = cursor_movement.x * m_ms;
-            float y_angle = cursor_movement.y * m_ms;
-
-            float new_y_angle = mAngleY + y_angle;
-            if (new_y_angle >= 1.4 || new_y_angle <= -1.4) // Angles are equivalent to 80 degrees in radians
-            {
-                y_angle = 0;
-                x_angle = 0;
-            }
-            mAngleY += y_angle;
-            mAngleX += x_angle;
-            std::cout << mAngleX << " " << mAngleY << std::endl;
+            const float x_angle = cursor_movement.x * m_ms;
+            const float y_angle = cursor_movement.y * m_ms;
 
             // Tilt
             if (y_angle != 0)
             {
                 auto right = glm::cross(mUp, mForward);
                 auto mtx = glm::rotate(glm::mat4(1), y_angle, right);
-                mForward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+                auto new_forward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+                if (std::abs(glm::dot(new_forward, mUp)) < 0.985f) // .985 == cos(10 degrees)/abs(sin(170 degrees))
+                    mForward = new_forward;
             }
 
             // Pan

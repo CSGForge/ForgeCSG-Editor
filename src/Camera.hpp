@@ -28,8 +28,6 @@ namespace ForgeEditor
         float mAspectRatio;
         float mNearDist;
         float mFarDist;
-        float mAngleY = 0.0f;
-        float mAngleX = 0.0f;
         bool mCursorLocked = false;
         glm::dvec2 mCursorPosition;
     };
