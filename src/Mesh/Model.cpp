@@ -68,6 +68,7 @@ namespace ForgeEditor
     void Model::Rebuild(ForgeCore::World *world)
     {
         mMeshes.clear();
+        srand(1); // Ensures consistent colours
         for (auto b : world->GetBrushes())
         {
             std::vector<MeshVertex> mesh_vs;

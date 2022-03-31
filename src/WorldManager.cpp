@@ -49,6 +49,8 @@ namespace ForgeEditor
 
     void WorldManager::BuildAiScene()
     {
+        srand(1); // Ensures consistent colours
+
         mAiScene = new aiScene();
         mAiScene->mPrivate = nullptr;
         mAiScene->mRootNode = new aiNode();
@@ -84,10 +86,14 @@ namespace ForgeEditor
                 unsigned int num_vertices = vs.size();
                 mesh->mNumVertices = num_vertices;
                 mesh->mVertices = new aiVector3D[num_vertices];
+                mesh->mColors[0] = new aiColor4D[num_vertices];
+                auto colour = aiColor3D((rand() % 256) / 255.0, (rand() % 256) / 255.0, (rand() % 256) / 255.0);
+
                 for (int i = 0; i < num_vertices; i++)
                 {
                     auto v = vs[i];
                     mesh->mVertices[i] = aiVector3D(v.x, v.y, v.z);
+                    mesh->mColors[0][i] = aiColor4D(colour.b, colour.g, colour.r, 1.0);
                 }
 
                 // Set mesh faces
