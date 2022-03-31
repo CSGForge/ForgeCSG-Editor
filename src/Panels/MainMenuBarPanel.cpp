@@ -18,7 +18,7 @@ namespace ForgeEditor
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New", "Ctrl+N"))
-                ;
+                mWorldManager->NewWorld();
             if (ImGui::MenuItem("Open", "Ctrl+O"))
                 ;
             if (ImGui::BeginMenu("Open Recent..."))

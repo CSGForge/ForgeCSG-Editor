@@ -12,6 +12,15 @@ namespace ForgeEditor
         mAiScene = nullptr;
     }
 
+    void WorldManager::NewWorld()
+    {
+        delete mWorld;
+        mWorld = new ForgeCore::World();
+        mModel->Rebuild(mWorld);
+        mSceneNeedsRebuild = true;
+        // TODO: Move selected brush and stuff into this class and reset them here
+    }
+
     void WorldManager::Update()
     {
         mWorld->Update();

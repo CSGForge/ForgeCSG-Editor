@@ -15,6 +15,7 @@ namespace ForgeEditor
         WorldManager();
         ~WorldManager() = default;
 
+        void NewWorld();
         void Update();
         void Render(int view);
         void Export(std::string path);
