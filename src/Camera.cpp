@@ -43,42 +43,63 @@ namespace ForgeEditor
             glfwGetCursorPos(native_window, &cursor_movement.x, &cursor_movement.y);
             cursor_movement -= mCursorPosition;
 
-            // Mouse changes mForward
-            // TODO: This is buggy :)
-            const float m_ms = -0.01f;
-            const float mdx = cursor_movement.x * m_ms;
-            const float mdy = cursor_movement.y * (mForward.z > 0 ? m_ms : -m_ms);
-            const float sx = sin(mdy);
-            const float cx = cos(mdy);
-            const float sy = sin(mdx);
-            const float cy = cos(mdx);
-            glm::mat3 mtx = {{cy, 0, sy}, {sx * sy, cx, -sx * cy}, {-cx * sy, sx, cx * cy}};
-            mForward = mtx * mForward;
-            mForward /= glm::length(mForward);
+            // Rotation angles
+            const float m_ms = 0.01f;
+            float x_angle = cursor_movement.x * m_ms;
+            float y_angle = cursor_movement.y * m_ms;
 
-            // KB changes mEye
-            auto right = glm::cross(mUp, mForward);
-            auto up = glm::cross(mForward, right);
-            glm::vec3 d_eye(0.0f);
-            if (glfwGetKey(native_window, GLFW_KEY_W) == GLFW_PRESS)
-                d_eye += mForward;
-            if (glfwGetKey(native_window, GLFW_KEY_A) == GLFW_PRESS)
-                d_eye -= right;
-            if (glfwGetKey(native_window, GLFW_KEY_S) == GLFW_PRESS)
-                d_eye -= mForward;
-            if (glfwGetKey(native_window, GLFW_KEY_D) == GLFW_PRESS)
-                d_eye += right;
-            if (glfwGetKey(native_window, GLFW_KEY_Q) == GLFW_PRESS)
-                d_eye += up;
-            if (glfwGetKey(native_window, GLFW_KEY_E) == GLFW_PRESS)
-                d_eye -= up;
+            float new_y_angle = mAngleY + y_angle;
+            if (new_y_angle >= 1.4 || new_y_angle <= -1.4) // Angles are equivalent to 80 degrees in radians
+            {
+                y_angle = 0;
+                x_angle = 0;
+            }
+            mAngleY += y_angle;
+            mAngleX += x_angle;
+            std::cout << mAngleX << " " << mAngleY << std::endl;
 
-            // Normalise speed
-            if (glm::length(d_eye) != 0)
-                d_eye /= glm::length(d_eye);
+            // Tilt
+            if (y_angle != 0)
+            {
+                auto right = glm::cross(mUp, mForward);
+                auto mtx = glm::rotate(glm::mat4(1), y_angle, right);
+                mForward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+            }
 
-            float ms = 0.5f;
-            mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
+            // Pan
+            if (x_angle != 0)
+            {
+                auto right = glm::cross(mUp, mForward);
+                auto up = glm::cross(mForward, right);
+                auto mtx = glm::rotate(glm::mat4(1), x_angle, up);
+                mForward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+            }
+
+            // Truck/Dolly/Pedestal
+            {
+                auto right = glm::cross(mUp, mForward);
+                auto up = glm::cross(mForward, right);
+                glm::vec3 d_eye(0.0f);
+                if (glfwGetKey(native_window, GLFW_KEY_W) == GLFW_PRESS)
+                    d_eye += mForward;
+                if (glfwGetKey(native_window, GLFW_KEY_A) == GLFW_PRESS)
+                    d_eye -= right;
+                if (glfwGetKey(native_window, GLFW_KEY_S) == GLFW_PRESS)
+                    d_eye -= mForward;
+                if (glfwGetKey(native_window, GLFW_KEY_D) == GLFW_PRESS)
+                    d_eye += right;
+                if (glfwGetKey(native_window, GLFW_KEY_Q) == GLFW_PRESS)
+                    d_eye += up;
+                if (glfwGetKey(native_window, GLFW_KEY_E) == GLFW_PRESS)
+                    d_eye -= up;
+
+                // Normalise speed
+                if (glm::length(d_eye) != 0)
+                    d_eye /= glm::length(d_eye);
+
+                const float ms = 0.5f;
+                mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
+            }
 
             glfwSetCursorPos(native_window, mCursorPosition.x, mCursorPosition.y);
         }
