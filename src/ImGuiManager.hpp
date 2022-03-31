@@ -23,6 +23,8 @@ namespace ForgeEditor
 
     private:
         std::vector<std::shared_ptr<BasePanel>> mPanels;
+
+        void SetImGuiStyle();
     };
 
 }

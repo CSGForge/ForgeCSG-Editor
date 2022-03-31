@@ -6,10 +6,11 @@ namespace ForgeEditor
 {
     ViewportPanel::ViewportPanel()
     {
+        // TODO: Resizing the glfw window causes the framebuffer to draw to main buffer?
         SetName("Viewport");
         mFramebufferHandle = bgfx::createFrameBuffer(1280, 720, bgfx::TextureFormat::BGRA8);
         bgfx::setViewFrameBuffer(1, mFramebufferHandle);
-        bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x800000FF, 1.0f, 0);
+        bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x72726FFF, 1.0f, 0);
     }
 
     ViewportPanel::~ViewportPanel()
