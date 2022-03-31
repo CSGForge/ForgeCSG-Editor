@@ -98,8 +98,8 @@ namespace ForgeEditor
             {
                 bool modified = false;
                 ImGui::BeginTable("planes", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg);
-                ImGui::TableSetupColumn("Normal");
-                ImGui::TableSetupColumn("Offset");
+                ImGui::TableSetupColumn("Normal", ImGuiTableColumnFlags_WidthStretch, 3.0f);
+                ImGui::TableSetupColumn("Offset", ImGuiTableColumnFlags_WidthStretch, 1.0f);
                 ImGui::TableHeadersRow();
                 for (int i = 0; i < (int)planes.size(); i++)
                 {
