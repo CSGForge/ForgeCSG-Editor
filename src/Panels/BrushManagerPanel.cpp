@@ -34,6 +34,7 @@ namespace ForgeEditor
         static std::vector<ForgeCore::Plane> planes;
         ImGui::BeginGroup();
         ImGui::BeginChild("hierarchy", ImVec2(150, -ImGui::GetFrameHeightWithSpacing()), true);
+        // TODO: Add reordering
         for (int i = 0; i < mWorld->GetBrushCount(); i++)
             if (ImGui::Selectable(("Brush " + std::to_string(i)).c_str(), mSelected == i))
             {
@@ -74,6 +75,10 @@ namespace ForgeEditor
             std::string op_names[2] = {"Solid", "Air"};
             if (ImGui::SliderInt("Operation", (int *)&brush_op, 0, 1, op_names[brush_op].c_str()))
                 mSelectedBrush->SetOperation(brush_op);
+
+            // Time editing
+            if (ImGui::SliderInt("Time", &mSelected, 0, mWorld->GetBrushCount() - 1))
+                mWorld->SetBrushTime(mSelectedBrush, mSelected);
 
             // Inputs to change the brush transform
             if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
