@@ -133,5 +133,11 @@ namespace ForgeEditor
         style.FrameRounding = 3;
         style.PopupRounding = 3;
         style.GrabRounding = 3;
+
+        ImGuiIO &io = ImGui::GetIO();
+        io.Fonts->ClearFonts();
+        io.Fonts->AddFontFromFileTTF("res/fonts/NotoSans-Regular.ttf", 17);
+        io.Fonts->Build();
+        // TODO: Add icons?
     }
 }
