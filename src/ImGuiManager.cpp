@@ -47,7 +47,7 @@ namespace ForgeEditor
     void ImGuiManager::RenderPanels()
     {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-        // ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
         for (auto &&panel : mPanels)
             panel->Render();
     }

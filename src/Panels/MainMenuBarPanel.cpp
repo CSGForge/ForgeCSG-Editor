@@ -1,5 +1,6 @@
 #include "MainMenuBarPanel.hpp"
 
+#include <bgfx/platform.h>
 #include <imgui/imgui.h>
 #include <portable-file-dialogs.h>
 
@@ -14,6 +15,8 @@ namespace ForgeEditor
 
     void MainMenuBarPanel::Render()
     {
+        std::string menu_action = "";
+
         ImGui::BeginMainMenuBar();
         if (ImGui::BeginMenu("File"))
         {
@@ -96,16 +99,58 @@ namespace ForgeEditor
         if (ImGui::BeginMenu("Help"))
         {
             if (ImGui::MenuItem("About"))
-                ;
+                menu_action = "open about window";
             if (ImGui::MenuItem("Website"))
-                ;
+            {
+                auto url = "https://github.com/CSGForge/ForgeCSG-Editor";
+#if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
+                system(std::string("xdg-open ").append(url).c_str());
+#elif BX_PLATFORM_OSX
+                system(std::string("open ").append(url).c_str());
+#elif BX_PLATFORM_WINDOWS
+                system(std::string("start ").append(url).c_str());
+#endif
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Manual", "Ctrl+H"))
                 ;
             if (ImGui::MenuItem("Report Bug"))
-                ;
+            {
+                auto url = "https://github.com/CSGForge/ForgeCSG-Editor/issues/new";
+#if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
+                system(std::string("xdg-open ").append(url).c_str());
+#elif BX_PLATFORM_OSX
+                system(std::string("open ").append(url).c_str());
+#elif BX_PLATFORM_WINDOWS
+                system(std::string("start ").append(url).c_str());
+#endif
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
+
+        bool popup_open = true;
+        if (menu_action == "open about window")
+            ImGui::OpenPopup("About");
+        if (ImGui::BeginPopupModal("About", &popup_open))
+        {
+            ImGui::Text("Developers");
+            ImGui::Separator();
+            ImGui::Text("Jarrod Doyle");
+            ImGui::Spacing();
+            ImGui::Spacing();
+            ImGui::Text("3rd Party Libraries");
+            ImGui::Separator();
+            ImGui::Text("Assimp (3d model export)");
+            ImGui::Text("BGFX (Cross-platform rendering)");
+            ImGui::Text("Bimg (BGFX images)");
+            ImGui::Text("Bx (BGFX base");
+            ImGui::Text("CSGForge-Core (Core CSG algorithm)");
+            ImGui::Text("glfw (Multi-platform windowing and input)");
+            ImGui::Text("Dear ImGui (User interface)");
+            ImGui::Text("pfd (System file dialogs for Windows, Linux, and Mac)");
+
+            ImGui::EndPopup();
+        }
     }
 }
