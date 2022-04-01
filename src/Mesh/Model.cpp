@@ -51,17 +51,17 @@ namespace ForgeEditor
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
-        mVsh = loadShader("res/shaders/glsl/vs_cubes.bin", "Vertex Shader");
-        mFsh = loadShader("res/shaders/glsl/fs_cubes.bin", "Fragment Shader");
-        mProgram = bgfx::createProgram(mVsh, mFsh, true);
+        auto vsh = loadShader("res/shaders/glsl/vs_cubes.bin", "Vertex Shader");
+        auto fsh = loadShader("res/shaders/glsl/fs_cubes.bin", "Fragment Shader");
+        mProgram = bgfx::createProgram(vsh, fsh, true);
+        bgfx::destroy(vsh);
+        bgfx::destroy(fsh);
 
         Rebuild(world);
     }
 
     Model::~Model()
     {
-        bgfx::destroy(mVsh);
-        bgfx::destroy(mFsh);
         bgfx::destroy(mProgram);
     }
 

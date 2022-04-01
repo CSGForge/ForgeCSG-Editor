@@ -45,6 +45,7 @@ namespace ForgeEditor
             imgui_manager.EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
             world_manager.Update();
+            world_manager.Render(0);
             world_manager.Render(1);
 
             mWindow->Update();
