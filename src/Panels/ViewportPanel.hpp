@@ -3,6 +3,7 @@
 #include <bgfx/bgfx.h>
 
 #include "BasePanel.hpp"
+#include "../Camera.hpp"
 
 namespace ForgeEditor
 {
@@ -16,5 +17,6 @@ namespace ForgeEditor
 
     private:
         bgfx::FrameBufferHandle mFramebufferHandle;
+        Camera mCamera;
     };
 }

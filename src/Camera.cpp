@@ -11,21 +11,20 @@ namespace ForgeEditor
     Camera::Camera(float fov_y, float near_dist, float far_dist, glm::vec3 eye, glm::vec3 forward, glm::vec3 up)
         : mFovY(fov_y), mNearDist(near_dist), mFarDist(far_dist), mEye(eye), mForward(forward), mUp(up) {}
 
-    void Camera::SetView(int view_id)
+    void Camera::SetView(int view_id, float aspect_ratio)
     {
         auto at_glm = mEye + mForward;
         bx::Vec3 eye = {mEye.x, mEye.y, mEye.z};
         bx::Vec3 at = {at_glm.x, at_glm.y, at_glm.z};
         bx::Vec3 up = {mUp.x, mUp.y, mUp.z};
         bx::mtxLookAt(mView, eye, at, up);
-        bx::mtxProj(mProj, mFovY, mAspectRatio, mNearDist, mFarDist, bgfx::getCaps()->homogeneousDepth);
+        bx::mtxProj(mProj, mFovY, aspect_ratio, mNearDist, mFarDist, bgfx::getCaps()->homogeneousDepth);
         bgfx::setViewTransform(view_id, mView, mProj);
     }
 
-    void Camera::Update(std::unique_ptr<Window> &window)
+    void Camera::Update(Window *window)
     {
-        mAspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
-
+        // TODO: Make this work through right clicking on the image in viewport
         if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantCaptureMouse)
             return;
 
