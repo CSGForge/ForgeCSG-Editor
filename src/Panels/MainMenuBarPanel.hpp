@@ -1,8 +1,6 @@
 #pragma once
 
 #include "BasePanel.hpp"
-#include "../ImGuiManager.hpp"
-#include "../WorldManager.hpp"
 
 namespace ForgeEditor
 {
@@ -15,7 +13,5 @@ namespace ForgeEditor
         void Render() override;
 
     private:
-        ImGuiManager *mImGuiManager;
-        WorldManager *mWorldManager;
     };
 }

@@ -2,6 +2,7 @@
 
 #include <assimp/Exporter.hpp>
 #include <assimp/postprocess.h>
+#include <portable-file-dialogs.h>
 
 namespace ForgeEditor
 {
@@ -10,6 +11,7 @@ namespace ForgeEditor
         mWorld = new ForgeCore::World();
         mModel = new Model(mWorld);
         mAiScene = nullptr;
+        mSelectedBrushIdx = -1;
     }
 
     void WorldManager::NewWorld()
@@ -18,7 +20,8 @@ namespace ForgeEditor
         mWorld = new ForgeCore::World();
         mModel->Rebuild(mWorld);
         mSceneNeedsRebuild = true;
-        // TODO: Move selected brush and stuff into this class and reset them here
+        mSelectedBrushIdx = -1;
+        // TODO: Fix segfault that occurs when trying to add brushes after this
     }
 
     void WorldManager::Update()
@@ -36,13 +39,33 @@ namespace ForgeEditor
         mModel->Render(view);
     }
 
+    ForgeCore::Brush *WorldManager::GetSelectedBrush()
+    {
+        return mWorld->GetBrush(mSelectedBrushIdx);
+    }
+
+    int WorldManager::GetSelectedBrushIdx()
+    {
+        return mSelectedBrushIdx;
+    }
+
+    void WorldManager::SetSelectedBrushIdx(int idx)
+    {
+        idx = std::clamp(idx, -1, mWorld->GetBrushCount() - 1);
+        mSelectedBrushIdx = idx;
+    }
+
     ForgeCore::World *WorldManager::GetWorld()
     {
         return mWorld;
     }
 
-    void WorldManager::Export(std::string path)
+    void WorldManager::Export()
     {
+        auto path = pfd::save_file("Export World...", ".fbx", {"FBX/OBJ", "*.obj *.fbx"}).result();
+        if (path.empty())
+            return;
+
         if (mSceneNeedsRebuild)
         {
             if (mAiScene != nullptr)

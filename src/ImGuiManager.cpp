@@ -5,8 +5,10 @@
 #include "imgui_backends/imgui_impl_glfw.hpp"
 #include "imgui_backends/imgui_impl_bgfx.hpp"
 #include "Panels/ViewportPanel.hpp"
-#include "Panels/BrushManagerPanel.hpp"
+#include "Panels/BrushEditorPanel.hpp"
 #include "Panels/MainMenuBarPanel.hpp"
+#include "Panels/TimelinePanel.hpp"
+#include "Panels/WorldEditorPanel.hpp"
 
 namespace ForgeEditor
 {
@@ -26,8 +28,10 @@ namespace ForgeEditor
         ImGui_Implbgfx_Init(255);
 
         mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushManagerPanel(world_manager->GetWorld())));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushEditorPanel(this, world_manager)));
         mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel(this, world_manager)));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new TimelinePanel(this, world_manager)));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new WorldEditorPanel(this, world_manager)));
     }
 
     ImGuiManager::~ImGuiManager()
@@ -47,7 +51,7 @@ namespace ForgeEditor
     void ImGuiManager::RenderPanels()
     {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-        ImGui::ShowDemoWindow();
+        // ImGui::ShowDemoWindow();
         for (auto &&panel : mPanels)
             panel->Render();
     }

@@ -18,10 +18,14 @@ namespace ForgeEditor
         void NewWorld();
         void Update();
         void Render(int view);
-        void Export(std::string path);
+        void Export();
+        ForgeCore::Brush *GetSelectedBrush();
+        int GetSelectedBrushIdx();
+        void SetSelectedBrushIdx(int idx);
         ForgeCore::World *GetWorld();
 
     private:
+        int mSelectedBrushIdx;
         ForgeCore::World *mWorld;
         aiScene *mAiScene;
         Model *mModel;

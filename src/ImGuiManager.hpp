@@ -10,6 +10,8 @@
 
 namespace ForgeEditor
 {
+    class BasePanel;
+
     class ImGuiManager
     {
     public:
