@@ -2,13 +2,13 @@
 
 #include <imgui/imgui.h>
 
+#include "../WorldManager.hpp"
+
 namespace ForgeEditor
 {
-    BrushEditorPanel::BrushEditorPanel(ImGuiManager *imGuiManager, WorldManager *world_manager)
+    BrushEditorPanel::BrushEditorPanel()
     {
         SetName("Brush Editor");
-        mImGuiManager = imGuiManager;
-        mWorldManager = world_manager;
     }
 
     void BrushEditorPanel::Render()
@@ -17,11 +17,12 @@ namespace ForgeEditor
         if (!visible)
             return;
         ImGui::Begin(GetName().c_str(), &visible);
-        auto brush = mWorldManager->GetSelectedBrush();
+        auto world_manager = &WorldManager::GetWorldManager();
+        auto brush = world_manager->GetSelectedBrush();
         if (brush != nullptr)
         {
-            auto brush_time = mWorldManager->GetSelectedBrushIdx();
-            auto world = mWorldManager->GetWorld();
+            auto brush_time = world_manager->GetSelectedBrushIdx();
+            auto world = world_manager->GetWorld();
 
             ImGui::Value("Intersection Count", (int)brush->GetIntersections().size());
             ImGui::Value("Face Count", (int)brush->GetFaces().size());
@@ -36,7 +37,7 @@ namespace ForgeEditor
             if (ImGui::SliderInt("Time", &brush_time, 0, world->GetBrushCount() - 1))
             {
                 world->SetBrushTime(brush, brush_time);
-                mWorldManager->SetSelectedBrushIdx(brush_time);
+                world_manager->SetSelectedBrushIdx(brush_time);
             }
 
             // Inputs to change the brush transform

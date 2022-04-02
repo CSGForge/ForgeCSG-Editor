@@ -1,16 +1,29 @@
 #include "WorldManager.hpp"
 
+#include <iostream>
+
 #include <assimp/Exporter.hpp>
 #include <portable-file-dialogs.h>
 
 namespace ForgeEditor
 {
+    WorldManager *WorldManager::sInstance = nullptr;
+
     WorldManager::WorldManager()
     {
+        if (sInstance != nullptr)
+            delete sInstance;
+        sInstance = this;
+
         mWorld = new ForgeCore::World();
         mModel = new Model(mWorld);
         mAiScene = nullptr;
         mSelectedBrushIdx = -1;
+    }
+
+    WorldManager &WorldManager::GetWorldManager()
+    {
+        return *sInstance;
     }
 
     void WorldManager::NewWorld()

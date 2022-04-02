@@ -12,12 +12,9 @@ namespace ForgeEditor
     Application::Application()
     {
         if (sInstance != nullptr)
-        {
-            // ! TODO: Shouldn't happen!
             delete sInstance;
-        }
-
         sInstance = this;
+
         mName = "CSG Forge";
         mWindow = std::make_unique<Window>(1280, 720, mName);
     }
@@ -31,7 +28,7 @@ namespace ForgeEditor
     void Application::Run()
     {
         auto world_manager = WorldManager();
-        auto imgui_manager = ImGuiManager(mWindow->GetNativeWindow(), &world_manager);
+        auto imgui_manager = ImGuiManager(mWindow->GetNativeWindow());
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {

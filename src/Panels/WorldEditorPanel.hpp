@@ -7,7 +7,7 @@ namespace ForgeEditor
     class WorldEditorPanel : BasePanel
     {
     public:
-        WorldEditorPanel(ImGuiManager *imGuiManager, WorldManager *world_manager);
+        WorldEditorPanel();
         ~WorldEditorPanel() = default;
 
         void Render() override;

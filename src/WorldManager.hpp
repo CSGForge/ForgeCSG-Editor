@@ -23,8 +23,10 @@ namespace ForgeEditor
         int GetSelectedBrushIdx();
         void SetSelectedBrushIdx(int idx);
         ForgeCore::World *GetWorld();
+        static WorldManager &GetWorldManager();
 
     private:
+        static WorldManager *sInstance;
         int mSelectedBrushIdx;
         ForgeCore::World *mWorld;
         aiScene *mAiScene;

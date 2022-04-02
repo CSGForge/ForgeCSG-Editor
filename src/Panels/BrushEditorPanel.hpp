@@ -7,7 +7,7 @@ namespace ForgeEditor
     class BrushEditorPanel : BasePanel
     {
     public:
-        BrushEditorPanel(ImGuiManager *imGuiManager, WorldManager *world_manager);
+        BrushEditorPanel();
         ~BrushEditorPanel() = default;
 
         void Render() override;

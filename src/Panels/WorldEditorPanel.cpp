@@ -2,6 +2,8 @@
 
 #include <imgui/imgui.h>
 
+#include "../WorldManager.hpp"
+
 namespace ForgeEditor
 {
     static std::vector<ForgeCore::Plane> primitive_planes[3] = {
@@ -45,11 +47,9 @@ namespace ForgeEditor
 
     static auto new_brush_settings = BrushSetting(ForgeCore::Operation::ADDITION, CUBE);
 
-    WorldEditorPanel::WorldEditorPanel(ImGuiManager *imGuiManager, WorldManager *world_manager)
+    WorldEditorPanel::WorldEditorPanel()
     {
         SetName("World Editor");
-        mImGuiManager = imGuiManager;
-        mWorldManager = world_manager;
     }
 
     void WorldEditorPanel::Render()
@@ -58,9 +58,10 @@ namespace ForgeEditor
         if (!visible)
             return;
         ImGui::Begin(GetName().c_str(), &visible);
+        auto world_manager = &WorldManager::GetWorldManager();
 
         if (ImGui::Button("New"))
-            mWorldManager->NewWorld();
+            world_manager->NewWorld();
         ImGui::SameLine();
         if (ImGui::Button("Save"))
             ;
@@ -69,10 +70,10 @@ namespace ForgeEditor
             ;
         ImGui::SameLine();
         if (ImGui::Button("Export"))
-            mWorldManager->Export();
+            world_manager->Export();
 
         // Slider to change the world void operation
-        auto world = mWorldManager->GetWorld();
+        auto world = world_manager->GetWorld();
         int world_op = world->GetWorldType() / 3;
         std::string op_names[2] = {"Solid", "Air"};
         if (ImGui::SliderInt("Void", &world_op, 0, 1, op_names[world_op].c_str()))
@@ -94,18 +95,18 @@ namespace ForgeEditor
         if (ImGui::Button("Add Brush"))
         {
             auto brush = world->AddBrush();
-            mWorldManager->SetSelectedBrushIdx(world->GetBrushCount() - 1);
+            world_manager->SetSelectedBrushIdx(world->GetBrushCount() - 1);
             brush->SetOperation(new_brush_settings.mOperation);
             brush->SetPlanes(primitive_planes[new_brush_settings.mBrushType]);
         }
         ImGui::SameLine();
         if (ImGui::Button("Delete Brush"))
         {
-            auto selected_idx = mWorldManager->GetSelectedBrushIdx();
+            auto selected_idx = world_manager->GetSelectedBrushIdx();
             if (selected_idx != -1)
             {
-                world->RemoveBrush(mWorldManager->GetSelectedBrush());
-                mWorldManager->SetSelectedBrushIdx(selected_idx);
+                world->RemoveBrush(world_manager->GetSelectedBrush());
+                world_manager->SetSelectedBrushIdx(selected_idx);
             }
         }
         ImGui::End();

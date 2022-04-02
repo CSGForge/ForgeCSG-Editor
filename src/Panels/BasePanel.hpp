@@ -2,9 +2,6 @@
 
 #include <string>
 
-#include "../ImGuiManager.hpp"
-#include "../WorldManager.hpp"
-
 namespace ForgeEditor
 {
     class ImGuiManager;
@@ -19,8 +16,6 @@ namespace ForgeEditor
         void SetName(std::string name);
 
     protected:
-        ImGuiManager *mImGuiManager;
-        WorldManager *mWorldManager;
         bool mVisible = true;
         std::string mName;
     };

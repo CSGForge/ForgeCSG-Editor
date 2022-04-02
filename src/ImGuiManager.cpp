@@ -12,8 +12,14 @@
 
 namespace ForgeEditor
 {
-    ImGuiManager::ImGuiManager(GLFWwindow *window, WorldManager *world_manager)
+    ImGuiManager *ImGuiManager::sInstance = nullptr;
+
+    ImGuiManager::ImGuiManager(GLFWwindow *window)
     {
+        if (sInstance != nullptr)
+            delete sInstance;
+        sInstance = this;
+
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
@@ -28,10 +34,15 @@ namespace ForgeEditor
         ImGui_Implbgfx_Init(255);
 
         mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new ViewportPanel()));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushEditorPanel(this, world_manager)));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel(this, world_manager)));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new TimelinePanel(this, world_manager)));
-        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new WorldEditorPanel(this, world_manager)));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new BrushEditorPanel()));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new MainMenuBarPanel()));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new TimelinePanel()));
+        mPanels.emplace_back(std::shared_ptr<BasePanel>((BasePanel *)new WorldEditorPanel()));
+    }
+
+    ImGuiManager &ImGuiManager::GetImGuiManager()
+    {
+        return *sInstance;
     }
 
     ImGuiManager::~ImGuiManager()

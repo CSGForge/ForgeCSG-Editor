@@ -3,24 +3,27 @@
 #include <bgfx/platform.h>
 #include <imgui/imgui.h>
 
+#include "../ImGuiManager.hpp"
+#include "../WorldManager.hpp"
+
 namespace ForgeEditor
 {
-    MainMenuBarPanel::MainMenuBarPanel(ImGuiManager *imGuiManager, WorldManager *world_manager)
+    MainMenuBarPanel::MainMenuBarPanel()
     {
         SetName("Main Menu Bar");
-        mImGuiManager = imGuiManager;
-        mWorldManager = world_manager;
     }
 
     void MainMenuBarPanel::Render()
     {
         std::string menu_action = "";
+        auto imgui_manager = &ImGuiManager::GetImGuiManager();
+        auto world_manager = &WorldManager::GetWorldManager();
 
         ImGui::BeginMainMenuBar();
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New", "Ctrl+N"))
-                mWorldManager->NewWorld();
+                world_manager->NewWorld();
             if (ImGui::MenuItem("Open", "Ctrl+O"))
                 ;
             if (ImGui::BeginMenu("Open Recent..."))
@@ -34,7 +37,7 @@ namespace ForgeEditor
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
                 ;
             if (ImGui::MenuItem("Export", "Ctrl+Shift+E"))
-                mWorldManager->Export();
+                world_manager->Export();
             ImGui::Separator();
             if (ImGui::MenuItem("Quit", "Ctrl+Q"))
                 ;
@@ -74,7 +77,7 @@ namespace ForgeEditor
             if (ImGui::MenuItem("Reset UI"))
                 ;
             ImGui::Separator();
-            auto panels = mImGuiManager->GetPanels();
+            auto panels = imgui_manager->GetPanels();
             for (int i = 0; i < panels.size(); i++)
             {
                 auto panel = panels[i].get();

@@ -7,7 +7,7 @@ namespace ForgeEditor
     class MainMenuBarPanel : BasePanel
     {
     public:
-        MainMenuBarPanel(ImGuiManager *imGuiManager, WorldManager *world_manager);
+        MainMenuBarPanel();
         ~MainMenuBarPanel() = default;
 
         void Render() override;

@@ -15,15 +15,17 @@ namespace ForgeEditor
     class ImGuiManager
     {
     public:
-        ImGuiManager(GLFWwindow *window, WorldManager *world_manager);
+        ImGuiManager(GLFWwindow *window);
         ~ImGuiManager();
 
         static void BeginFrame();
         void RenderPanels();
         static void EndFrame(uint32_t width, uint32_t height);
         std::vector<std::shared_ptr<BasePanel>> &GetPanels();
+        static ImGuiManager &GetImGuiManager();
 
     private:
+        static ImGuiManager *sInstance;
         std::vector<std::shared_ptr<BasePanel>> mPanels;
 
         void SetImGuiStyle();
