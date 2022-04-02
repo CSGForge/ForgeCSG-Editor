@@ -1,12 +1,10 @@
 #include "BasePanel.hpp"
 
-#include <iostream>
-
 namespace ForgeEditor
 {
     void BasePanel::Render()
     {
-        std::cout << "Base not overriden" << std::endl;
+        throw;
     }
 
     bool BasePanel::GetVisibility()

@@ -1,8 +1,5 @@
 #include "Mesh.hpp"
 
-#include <fstream>
-#include <iostream>
-
 namespace ForgeEditor
 {
     Mesh::Mesh(const std::vector<MeshVertex> &vertices, const std::vector<unsigned int> &indices, bgfx::VertexLayout vertexLayout)

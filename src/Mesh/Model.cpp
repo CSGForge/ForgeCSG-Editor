@@ -1,7 +1,6 @@
 #include "Model.hpp"
 
 #include <fstream>
-#include <iostream>
 
 namespace ForgeEditor
 {

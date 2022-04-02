@@ -2,9 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
-#include <assimp/scene.h>
 #include <CSGForge-Core/csg.hpp>
 
 #include "Mesh.hpp"

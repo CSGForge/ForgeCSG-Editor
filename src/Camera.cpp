@@ -1,7 +1,6 @@
 #include "Camera.hpp"
 
-#include <iostream>
-
+#include <bx/math.h>
 #include <bgfx/bgfx.h>
 #include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>

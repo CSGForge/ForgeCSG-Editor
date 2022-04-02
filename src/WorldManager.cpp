@@ -1,7 +1,6 @@
 #include "WorldManager.hpp"
 
 #include <assimp/Exporter.hpp>
-#include <assimp/postprocess.h>
 #include <portable-file-dialogs.h>
 
 namespace ForgeEditor

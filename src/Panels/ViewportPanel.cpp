@@ -46,7 +46,6 @@ namespace ForgeEditor
 
         auto dis_size = ImGui::GetIO().DisplaySize;
         auto uv1 = ImVec2(win_size.x / dis_size.x, 1.0f - win_size.y / dis_size.y);
-        mCamera.SetView(0, dis_size.x / dis_size.y);
         bgfx::touch(1); // Makes sure this view is rendered even if nothing is submitted for drawing
 
         ImGui::Image((ImTextureID)(int64_t)bgfx::getTexture(mFramebufferHandle).idx, win_size, ImVec2(0, 1), uv1);

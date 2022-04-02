@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include <bx/math.h>
 #include <glm/glm.hpp>
 
 #include "Window.hpp"

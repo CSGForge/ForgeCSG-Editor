@@ -1,7 +1,5 @@
 #include "Window.hpp"
 
-#include <string>
-
 #include <bx/bx.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
