@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bgfx/bgfx.h>
+#include <glm/glm.hpp>
 
 #include "BasePanel.hpp"
 #include "../Camera.hpp"

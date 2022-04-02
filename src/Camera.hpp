@@ -1,13 +1,21 @@
 #pragma once
 
-#include <memory>
-
 #include <glm/glm.hpp>
-
-#include "Window.hpp"
 
 namespace ForgeEditor
 {
+    struct CameraMoveState
+    {
+        float mAngleX = 0.0f;
+        float mAngleY = 0.0f;
+        bool mForward = false;
+        bool mBackward = false;
+        bool mLeft = false;
+        bool mRight = false;
+        bool mUp = false;
+        bool mDown = false;
+    };
+
     class Camera
     {
     public:
@@ -16,7 +24,7 @@ namespace ForgeEditor
         ~Camera() = default;
 
         void SetView(int view_id, float aspect_ratio);
-        void Update(Window *window);
+        void Update(CameraMoveState cam_mov_state);
 
     private:
         glm::vec3 mEye;
@@ -27,7 +35,5 @@ namespace ForgeEditor
         float mFovY;
         float mNearDist;
         float mFarDist;
-        bool mCursorLocked = false;
-        glm::dvec2 mCursorPosition;
     };
 }

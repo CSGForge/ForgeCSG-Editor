@@ -2,8 +2,6 @@
 
 #include <imgui/imgui.h>
 
-#include "../Application.hpp"
-
 namespace ForgeEditor
 {
     ViewportPanel::ViewportPanel()
@@ -39,15 +37,36 @@ namespace ForgeEditor
         // Update view
         auto win_size = ImGui::GetWindowSize();
         bgfx::setViewRect(1, 0, 0, win_size.x, win_size.y);
+
+        // Update camera. Use an invisible button to capture input
+        auto viewport_start_pos = ImGui::GetCursorScreenPos();
+        ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+        if (ImGui::IsItemHovered() & ImGui::IsMouseDown(ImGuiMouseButton_Right))
+        {
+            auto io = &ImGui::GetIO();
+            CameraMoveState cam_mov_state;
+            cam_mov_state.mAngleX = io->MouseDelta.x;
+            cam_mov_state.mAngleY = io->MouseDelta.y;
+            cam_mov_state.mForward = ImGui::IsKeyDown(ImGuiKey_W);
+            cam_mov_state.mBackward = ImGui::IsKeyDown(ImGuiKey_S);
+            cam_mov_state.mLeft = ImGui::IsKeyDown(ImGuiKey_A);
+            cam_mov_state.mRight = ImGui::IsKeyDown(ImGuiKey_D);
+            cam_mov_state.mUp = ImGui::IsKeyDown(ImGuiKey_Q);
+            cam_mov_state.mDown = ImGui::IsKeyDown(ImGuiKey_E);
+            mCamera.Update(cam_mov_state);
+
+            // TODO: Reset mouse position
+            // ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+        }
         float aspect_ratio = win_size.x / win_size.y;
-        auto window = Application::GetApplication().GetWindow();
-        mCamera.Update(&window);
         mCamera.SetView(1, aspect_ratio);
 
+        // Draw the framebuffer image. Need to set some imgui stuff to draw in the same place as the invis button
+        ImGui::SetItemAllowOverlap();
+        ImGui::SetCursorScreenPos(viewport_start_pos);
         auto dis_size = ImGui::GetIO().DisplaySize;
         auto uv1 = ImVec2(win_size.x / dis_size.x, 1.0f - win_size.y / dis_size.y);
         bgfx::touch(1); // Makes sure this view is rendered even if nothing is submitted for drawing
-
         ImGui::Image((ImTextureID)(int64_t)bgfx::getTexture(mFramebufferHandle).idx, win_size, ImVec2(0, 1), uv1);
         ImGui::EndChild();
         ImGui::End();

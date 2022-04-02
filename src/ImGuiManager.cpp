@@ -61,7 +61,7 @@ namespace ForgeEditor
 
     void ImGuiManager::RenderPanels()
     {
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
         // ImGui::ShowDemoWindow();
         for (auto &&panel : mPanels)
             panel->Render();
@@ -124,7 +124,7 @@ namespace ForgeEditor
         colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
         colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
         colors[ImGuiCol_DockingPreview] = ImVec4(0.86f, 0.61f, 0.33f, 0.54f);
-        colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.86f, 0.61f, 0.33f, 0.54f);
+        colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
         colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
         colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
         colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);

@@ -2,7 +2,6 @@
 
 #include <bx/math.h>
 #include <bgfx/bgfx.h>
-#include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace ForgeEditor
@@ -21,83 +20,56 @@ namespace ForgeEditor
         bgfx::setViewTransform(view_id, mView, mProj);
     }
 
-    void Camera::Update(Window *window)
+    void Camera::Update(CameraMoveState cam_mov_state)
     {
-        // TODO: Make this work through right clicking on the image in viewport
-        if (ImGui::GetIO().WantCaptureKeyboard || ImGui::GetIO().WantCaptureMouse)
-            return;
+        // Rotation angles
+        const float m_ms = 0.005f;
+        const float x_angle = cam_mov_state.mAngleX * m_ms;
+        const float y_angle = cam_mov_state.mAngleY * m_ms;
 
-        auto native_window = window->GetNativeWindow();
-        if (glfwGetMouseButton(native_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+        // Tilt
+        if (y_angle != 0)
         {
-            if (!mCursorLocked)
-            {
-                mCursorLocked = true;
-                glfwGetCursorPos(native_window, &mCursorPosition.x, &mCursorPosition.y);
-                glfwSetInputMode(native_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
-
-            glm::dvec2 cursor_movement;
-            glfwGetCursorPos(native_window, &cursor_movement.x, &cursor_movement.y);
-            cursor_movement -= mCursorPosition;
-
-            // Rotation angles
-            const float m_ms = 0.01f;
-            const float x_angle = cursor_movement.x * m_ms;
-            const float y_angle = cursor_movement.y * m_ms;
-
-            // Tilt
-            if (y_angle != 0)
-            {
-                auto right = glm::cross(mUp, mForward);
-                auto mtx = glm::rotate(glm::mat4(1), y_angle, right);
-                auto new_forward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
-                if (std::abs(glm::dot(new_forward, mUp)) < 0.985f) // .985 == cos(10 degrees)/abs(sin(170 degrees))
-                    mForward = new_forward;
-            }
-
-            // Pan
-            if (x_angle != 0)
-            {
-                auto right = glm::cross(mUp, mForward);
-                auto up = glm::cross(mForward, right);
-                auto mtx = glm::rotate(glm::mat4(1), x_angle, up);
-                mForward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
-            }
-
-            // Truck/Dolly/Pedestal
-            {
-                auto right = glm::cross(mUp, mForward);
-                auto up = glm::cross(mForward, right);
-                glm::vec3 d_eye(0.0f);
-                if (glfwGetKey(native_window, GLFW_KEY_W) == GLFW_PRESS)
-                    d_eye += mForward;
-                if (glfwGetKey(native_window, GLFW_KEY_A) == GLFW_PRESS)
-                    d_eye -= right;
-                if (glfwGetKey(native_window, GLFW_KEY_S) == GLFW_PRESS)
-                    d_eye -= mForward;
-                if (glfwGetKey(native_window, GLFW_KEY_D) == GLFW_PRESS)
-                    d_eye += right;
-                if (glfwGetKey(native_window, GLFW_KEY_Q) == GLFW_PRESS)
-                    d_eye += up;
-                if (glfwGetKey(native_window, GLFW_KEY_E) == GLFW_PRESS)
-                    d_eye -= up;
-
-                // Normalise speed
-                if (glm::length(d_eye) != 0)
-                    d_eye /= glm::length(d_eye);
-
-                const float ms = 0.5f;
-                mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
-            }
-
-            glfwSetCursorPos(native_window, mCursorPosition.x, mCursorPosition.y);
+            auto right = glm::cross(mUp, mForward);
+            auto mtx = glm::rotate(glm::mat4(1), y_angle, right);
+            auto new_forward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+            if (std::abs(glm::dot(new_forward, mUp)) < 0.985f) // .985 == cos(10 degrees)/abs(sin(170 degrees))
+                mForward = new_forward;
         }
-        else if (mCursorLocked)
+
+        // Pan
+        if (x_angle != 0)
         {
-            mCursorLocked = false;
-            glfwSetInputMode(native_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            glfwSetCursorPos(native_window, mCursorPosition.x, mCursorPosition.y);
+            auto right = glm::cross(mUp, mForward);
+            auto up = glm::cross(mForward, right);
+            auto mtx = glm::rotate(glm::mat4(1), x_angle, up);
+            mForward = glm::normalize(glm::mat3(glm::vec3(mtx[0]), glm::vec3(mtx[1]), glm::vec3(mtx[2])) * mForward);
+        }
+
+        // Truck/Dolly/Pedestal
+        {
+            auto right = glm::cross(mUp, mForward);
+            auto up = glm::cross(mForward, right);
+            glm::vec3 d_eye(0.0f);
+            if (cam_mov_state.mForward)
+                d_eye += mForward;
+            if (cam_mov_state.mBackward)
+                d_eye -= mForward;
+            if (cam_mov_state.mLeft)
+                d_eye -= right;
+            if (cam_mov_state.mRight)
+                d_eye += right;
+            if (cam_mov_state.mUp)
+                d_eye += up;
+            if (cam_mov_state.mDown)
+                d_eye -= up;
+
+            // Normalise speed
+            if (glm::length(d_eye) != 0)
+                d_eye /= glm::length(d_eye);
+
+            const float ms = 0.5f;
+            mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
         }
     }
 }
