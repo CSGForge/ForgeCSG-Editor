@@ -41,7 +41,7 @@ namespace ForgeEditor
         // Update camera. Use an invisible button to capture input
         auto viewport_start_pos = ImGui::GetCursorScreenPos();
         ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
-        if (ImGui::IsItemHovered() & ImGui::IsMouseDown(ImGuiMouseButton_Right))
+        if (ImGui::IsItemHovered() && ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Right))
         {
             auto io = &ImGui::GetIO();
             CameraMoveState cam_mov_state;
