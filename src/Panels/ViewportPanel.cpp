@@ -9,7 +9,12 @@ namespace ForgeEditor
     ViewportPanel::ViewportPanel()
     {
         SetName("Viewport");
-        mFramebufferHandle = bgfx::createFrameBuffer(bgfx::BackbufferRatio::Equal, bgfx::TextureFormat::BGRA8);
+        bgfx::TextureHandle buffer_tex[2] = {
+            bgfx::createTexture2D(bgfx::BackbufferRatio::Equal, false, 1, bgfx::TextureFormat::RGBA32F, BGFX_TEXTURE_RT),
+            bgfx::createTexture2D(bgfx::BackbufferRatio::Equal, false, 1, bgfx::TextureFormat::D32F, BGFX_TEXTURE_RT),
+        };
+        mFramebufferHandle = bgfx::createFrameBuffer(2, buffer_tex, true);
+        bgfx::setViewFrameBuffer(1, mFramebufferHandle);
         bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x72726FFF, 1.0f, 0);
         mCamera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
     }
