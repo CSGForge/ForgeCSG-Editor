@@ -1,6 +1,7 @@
 #include "ImGuiManager.hpp"
 
 #include <imgui/imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 
 #include "imgui_backends/imgui_impl_glfw.hpp"
 #include "imgui_backends/imgui_impl_bgfx.hpp"
@@ -57,6 +58,7 @@ namespace ForgeEditor
         ImGui_ImplGlfw_NewFrame();
         ImGui_Implbgfx_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
     }
 
     void ImGuiManager::RenderPanels()

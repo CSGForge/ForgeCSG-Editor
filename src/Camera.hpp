@@ -26,6 +26,9 @@ namespace ForgeEditor
         void SetView(int view_id, float aspect_ratio);
         void Update(CameraMoveState cam_mov_state);
 
+        glm::mat4 GetView();
+        glm::mat4 GetProjection();
+
     private:
         glm::vec3 mEye;
         glm::vec3 mForward;

@@ -3,6 +3,7 @@
 #include <bx/math.h>
 #include <bgfx/bgfx.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace ForgeEditor
 {
@@ -71,5 +72,15 @@ namespace ForgeEditor
             const float ms = 0.5f;
             mEye += ms * glm::vec3{d_eye.x, d_eye.y, d_eye.z};
         }
+    }
+
+    glm::mat4 Camera::GetView()
+    {
+        return glm::make_mat4(mView);
+    }
+
+    glm::mat4 Camera::GetProjection()
+    {
+        return glm::make_mat4(mProj);
     }
 }

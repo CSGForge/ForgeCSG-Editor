@@ -1,6 +1,10 @@
 #include "ViewportPanel.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include <imgui/imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 
 #include "../WorldManager.hpp"
 
@@ -44,7 +48,6 @@ namespace ForgeEditor
         ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
         if (ImGui::IsItemHovered() && ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Right))
         {
-
             CameraMoveState cam_mov_state;
             cam_mov_state.mAngleX = io->MouseDelta.x;
             cam_mov_state.mAngleY = io->MouseDelta.y;
@@ -73,6 +76,31 @@ namespace ForgeEditor
         auto dis_size = io->DisplaySize;
         auto uv1 = ImVec2(win_size.x / dis_size.x, 1.0f - win_size.y / dis_size.y);
         ImGui::Image((ImTextureID)(int64_t)bgfx::getTexture(mFramebufferHandle).idx, win_size, ImVec2(0, 1), uv1);
+
+        // Draw guizmos
+        auto selected_brush = world_manager->GetSelectedBrush();
+        if (selected_brush)
+        {
+            // Initialise the ImGuizmo stuff
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+
+            // Set the region
+            auto win_pos = ImGui::GetWindowPos();
+            ImGuizmo::SetRect(win_pos.x, win_pos.y, win_size.x, win_size.y);
+
+            // Set the camera
+            auto cam_view = mCamera.GetView();
+            auto cam_proj = mCamera.GetProjection();
+            auto transform = selected_brush->GetTransform();
+            auto transform_mtx =
+                glm::translate(glm::mat4(1.0f), transform.mTranslation) *
+                glm::toMat4(glm::quat(transform.mRotation)) *
+                glm::scale(glm::mat4(1.0f), transform.mScale);
+
+            // Render
+            ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
+        }
         ImGui::EndChild();
         ImGui::End();
 
