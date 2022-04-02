@@ -3,7 +3,7 @@ project "imgui"
     language "C++"
     cppdialect "C++17"
     
-    includedirs {"imgui"}
+    includedirs {"imgui", "imgui/imgui", "imgui/ImGuizmo"}
     files {
         "imgui/imgui/imconfig.h",
         "imgui/imgui/imgui_demo.cpp",
@@ -14,5 +14,7 @@ project "imgui"
         "imgui/imgui/imgui.*",
         "imgui/imgui/imstb_rectpack.h",
         "imgui/imgui/imstb_texedit.h",
-        "imgui/imgui/imstb_truetype.h"
+        "imgui/imgui/imstb_truetype.h",
+        "imgui/ImGuizmo/ImGuizmo.h",
+        "imgui/ImGuizmo/ImGuizmo.cpp",
     }
