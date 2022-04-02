@@ -45,23 +45,27 @@ namespace ForgeEditor
 
         // Update camera. Use an invisible button to capture input
         auto viewport_start_pos = ImGui::GetCursorScreenPos();
-        ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
-        if (ImGui::IsItemHovered() && ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Right))
+        if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
         {
-            CameraMoveState cam_mov_state;
-            cam_mov_state.mAngleX = io->MouseDelta.x;
-            cam_mov_state.mAngleY = io->MouseDelta.y;
-            cam_mov_state.mForward = ImGui::IsKeyDown(ImGuiKey_W);
-            cam_mov_state.mBackward = ImGui::IsKeyDown(ImGuiKey_S);
-            cam_mov_state.mLeft = ImGui::IsKeyDown(ImGuiKey_A);
-            cam_mov_state.mRight = ImGui::IsKeyDown(ImGuiKey_D);
-            cam_mov_state.mUp = ImGui::IsKeyDown(ImGuiKey_Q);
-            cam_mov_state.mDown = ImGui::IsKeyDown(ImGuiKey_E);
-            mCamera.Update(cam_mov_state);
+            ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+            if (ImGui::IsItemHovered() && ImGui::IsItemActive())
+            {
+                CameraMoveState cam_mov_state;
+                cam_mov_state.mAngleX = io->MouseDelta.x;
+                cam_mov_state.mAngleY = io->MouseDelta.y;
+                cam_mov_state.mForward = ImGui::IsKeyDown(ImGuiKey_W);
+                cam_mov_state.mBackward = ImGui::IsKeyDown(ImGuiKey_S);
+                cam_mov_state.mLeft = ImGui::IsKeyDown(ImGuiKey_A);
+                cam_mov_state.mRight = ImGui::IsKeyDown(ImGuiKey_D);
+                cam_mov_state.mUp = ImGui::IsKeyDown(ImGuiKey_Q);
+                cam_mov_state.mDown = ImGui::IsKeyDown(ImGuiKey_E);
+                mCamera.Update(cam_mov_state);
 
-            // TODO: Reset mouse position
-            // ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+                // TODO: Reset mouse position
+                // ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+            }
         }
+
         float aspect_ratio = win_size.x / win_size.y;
         mCamera.SetView(1, aspect_ratio);
 
@@ -95,11 +99,18 @@ namespace ForgeEditor
             auto transform = selected_brush->GetTransform();
             auto transform_mtx =
                 glm::translate(glm::mat4(1.0f), transform.mTranslation) *
-                glm::toMat4(glm::quat(transform.mRotation)) *
+                glm::toMat4(glm::quat(0.01745329f * transform.mRotation)) *
                 glm::scale(glm::mat4(1.0f), transform.mScale);
 
-            // Render
+            // Render and update
             ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
+            if (ImGuizmo::IsUsing())
+            {
+                // TODO: Problem with moving along the local axis. Screws up rotation and stuff
+                float translation[3], rotation[3], scale[3];
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_mtx), translation, rotation, scale);
+                selected_brush->SetTransform({glm::make_vec3(scale), 57.29578f * glm::make_vec3(rotation), glm::make_vec3(translation)});
+            }
         }
         ImGui::EndChild();
         ImGui::End();
