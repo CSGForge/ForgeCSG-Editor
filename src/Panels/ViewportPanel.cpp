@@ -2,6 +2,8 @@
 
 #include <imgui/imgui.h>
 
+#include "../WorldManager.hpp"
+
 namespace ForgeEditor
 {
     ViewportPanel::ViewportPanel()
@@ -24,26 +26,25 @@ namespace ForgeEditor
 
     void ViewportPanel::Render()
     {
-        bool visible = GetVisibility();
-        if (!visible)
-            return;
-
         // Set the view each frame because resizing display window drops this bind
         bgfx::setViewFrameBuffer(1, mFramebufferHandle);
 
+        bool visible = GetVisibility();
+        if (!visible)
+            return;
         ImGui::Begin(GetName().c_str(), &visible);
         ImGui::BeginChild("Framebuffer");
 
-        // Update view
+        auto world_manager = &WorldManager::GetWorldManager();
         auto win_size = ImGui::GetWindowSize();
-        bgfx::setViewRect(1, 0, 0, win_size.x, win_size.y);
+        auto io = &ImGui::GetIO();
 
         // Update camera. Use an invisible button to capture input
         auto viewport_start_pos = ImGui::GetCursorScreenPos();
         ImGui::InvisibleButton("viewport_area", win_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
         if (ImGui::IsItemHovered() && ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Right))
         {
-            auto io = &ImGui::GetIO();
+
             CameraMoveState cam_mov_state;
             cam_mov_state.mAngleX = io->MouseDelta.x;
             cam_mov_state.mAngleY = io->MouseDelta.y;
@@ -61,12 +62,16 @@ namespace ForgeEditor
         float aspect_ratio = win_size.x / win_size.y;
         mCamera.SetView(1, aspect_ratio);
 
+        // Render world
+        bgfx::setViewRect(1, 0, 0, win_size.x, win_size.y);
+        bgfx::touch(1); // Makes sure this view is rendered even if nothing is submitted for drawing
+        world_manager->Render(1);
+
         // Draw the framebuffer image. Need to set some imgui stuff to draw in the same place as the invis button
         ImGui::SetItemAllowOverlap();
         ImGui::SetCursorScreenPos(viewport_start_pos);
-        auto dis_size = ImGui::GetIO().DisplaySize;
+        auto dis_size = io->DisplaySize;
         auto uv1 = ImVec2(win_size.x / dis_size.x, 1.0f - win_size.y / dis_size.y);
-        bgfx::touch(1); // Makes sure this view is rendered even if nothing is submitted for drawing
         ImGui::Image((ImTextureID)(int64_t)bgfx::getTexture(mFramebufferHandle).idx, win_size, ImVec2(0, 1), uv1);
         ImGui::EndChild();
         ImGui::End();

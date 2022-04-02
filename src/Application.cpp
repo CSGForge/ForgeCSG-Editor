@@ -32,15 +32,11 @@ namespace ForgeEditor
 
         while (!glfwWindowShouldClose(mWindow->GetNativeWindow()))
         {
-            bgfx::touch(0);
-
             imgui_manager.BeginFrame();
             imgui_manager.RenderPanels();
             imgui_manager.EndFrame(mWindow->GetWidth(), mWindow->GetHeight());
 
             world_manager.Update();
-            world_manager.Render(1);
-
             mWindow->Update();
         }
     }
