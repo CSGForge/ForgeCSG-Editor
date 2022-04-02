@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BasePanel.hpp"
-#include "../WorldManager.hpp"
 
 namespace ForgeEditor
 {
@@ -14,6 +13,5 @@ namespace ForgeEditor
         void Render() override;
 
     private:
-        WorldManager *mWorldManager;
     };
 }
