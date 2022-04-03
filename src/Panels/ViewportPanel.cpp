@@ -119,7 +119,9 @@ namespace ForgeEditor
                 glm::scale(glm::mat4(1.0f), transform.mScale);
 
             // Render and update
-            ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), (ImGuizmo::OPERATION)mGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
+            float snap_value = mGuizmoType == ImGuizmo::OPERATION::ROTATE ? 22.5f : 0.25f;
+            float snap_values[3] = {snap_value, snap_value, snap_value};
+            ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), (ImGuizmo::OPERATION)mGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx), nullptr, snap_values);
             if (ImGuizmo::IsUsing())
             {
                 float translation[3], rotation[3], scale[3];
