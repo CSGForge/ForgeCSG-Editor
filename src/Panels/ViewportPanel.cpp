@@ -2,7 +2,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <imgui/imgui.h>
 #include <ImGuizmo/ImGuizmo.h>
 
@@ -97,19 +97,19 @@ namespace ForgeEditor
             auto cam_view = mCamera.GetView();
             auto cam_proj = mCamera.GetProjection();
             auto transform = selected_brush->GetTransform();
+            auto rot_rad = glm::radians(transform.mRotation);
             auto transform_mtx =
                 glm::translate(glm::mat4(1.0f), transform.mTranslation) *
-                glm::toMat4(glm::quat(0.01745329f * transform.mRotation)) *
+                glm::eulerAngleXYZ(rot_rad.x, rot_rad.y, rot_rad.z) *
                 glm::scale(glm::mat4(1.0f), transform.mScale);
 
             // Render and update
             ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
             if (ImGuizmo::IsUsing())
             {
-                // TODO: Problem with moving along the local axis. Screws up rotation and stuff
                 float translation[3], rotation[3], scale[3];
                 ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_mtx), translation, rotation, scale);
-                selected_brush->SetTransform({glm::make_vec3(scale), 57.29578f * glm::make_vec3(rotation), glm::make_vec3(translation)});
+                selected_brush->SetTransform({glm::make_vec3(scale), glm::make_vec3(rotation), glm::make_vec3(translation)});
             }
         }
         ImGui::EndChild();
