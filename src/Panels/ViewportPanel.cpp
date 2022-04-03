@@ -66,7 +66,7 @@ namespace ForgeEditor
                 // ImGui::SetMouseCursor(ImGuiMouseCursor_None);
             }
         }
-        else if (ImGui::IsWindowFocused())
+        else if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered())
         {
             // Guizmo keybinds
             if (ImGui::IsKeyDown(ImGuiKey_Q))
@@ -131,6 +131,37 @@ namespace ForgeEditor
         }
         ImGui::EndChild();
         ImGui::End();
+
+        // Tool change buttons
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+        ImVec2 toolbox_pos = {viewport_start_pos.x + 5, viewport_start_pos.y + 5};
+        ImGui::SetNextWindowBgAlpha(0.5f);
+        ImGui::SetNextWindowPos(toolbox_pos);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(0.f, 0.f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 4.f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4.f, 4.f));
+        ImGui::Begin("Viewport Tool Buttons", nullptr, window_flags);
+        std::string labels[] = {"00", "01", "02", "03", "04"};
+        std::string tooltips[] = {"View (Q)", "Move (W)", "Rotate (E)", "Scale (R)", "Transform (T)"};
+        int guizmo_types[] = {-1, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::OPERATION::ROTATE, ImGuizmo::OPERATION::SCALE, ImGuizmo::OPERATION::UNIVERSAL};
+        for (int i = 0; i < 5; i++)
+        {
+            if (mGuizmoType == guizmo_types[i])
+            {
+                auto colour = ImGui::GetStyle().Colors[ImGuiCol_SliderGrab];
+                ImGui::PushStyleColor(ImGuiCol_Button, colour);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colour);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, colour);
+                ImGui::Button(labels[i].c_str());
+                ImGui::PopStyleColor(3);
+            }
+            else if (ImGui::Button(labels[i].c_str()))
+                mGuizmoType = guizmo_types[i];
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip(tooltips[i].c_str());
+        }
+        ImGui::End();
+        ImGui::PopStyleVar(3);
 
         SetVisibility(visible);
     }
