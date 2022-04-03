@@ -19,5 +19,6 @@ namespace ForgeEditor
     private:
         bgfx::FrameBufferHandle mFramebufferHandle;
         Camera mCamera;
+        int mGuizmoType;
     };
 }

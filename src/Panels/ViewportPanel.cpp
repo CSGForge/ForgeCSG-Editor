@@ -21,6 +21,7 @@ namespace ForgeEditor
         bgfx::setViewFrameBuffer(1, mFramebufferHandle);
         bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x72726FFF, 1.0f, 0);
         mCamera = {60.0f, 0.1f, 100.f, {0.0f, 0.0f, -10.0f}};
+        mGuizmoType = -1;
     }
 
     ViewportPanel::~ViewportPanel()
@@ -65,6 +66,20 @@ namespace ForgeEditor
                 // ImGui::SetMouseCursor(ImGuiMouseCursor_None);
             }
         }
+        else if (ImGui::IsWindowFocused())
+        {
+            // Guizmo keybinds
+            if (ImGui::IsKeyDown(ImGuiKey_Q))
+                mGuizmoType = -1;
+            if (ImGui::IsKeyDown(ImGuiKey_W))
+                mGuizmoType = ImGuizmo::OPERATION::TRANSLATE;
+            if (ImGui::IsKeyDown(ImGuiKey_E))
+                mGuizmoType = ImGuizmo::OPERATION::ROTATE;
+            if (ImGui::IsKeyDown(ImGuiKey_R))
+                mGuizmoType = ImGuizmo::OPERATION::SCALE;
+            if (ImGui::IsKeyDown(ImGuiKey_T))
+                mGuizmoType = ImGuizmo::OPERATION::UNIVERSAL;
+        }
 
         float aspect_ratio = win_size.x / win_size.y;
         mCamera.SetView(1, aspect_ratio);
@@ -83,7 +98,7 @@ namespace ForgeEditor
 
         // Draw guizmos
         auto selected_brush = world_manager->GetSelectedBrush();
-        if (selected_brush)
+        if (selected_brush && mGuizmoType != -1)
         {
             // Initialise the ImGuizmo stuff
             ImGuizmo::SetOrthographic(false);
@@ -104,7 +119,7 @@ namespace ForgeEditor
                 glm::scale(glm::mat4(1.0f), transform.mScale);
 
             // Render and update
-            ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
+            ImGuizmo::Manipulate(glm::value_ptr(cam_view), glm::value_ptr(cam_proj), (ImGuizmo::OPERATION)mGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform_mtx));
             if (ImGuizmo::IsUsing())
             {
                 float translation[3], rotation[3], scale[3];
