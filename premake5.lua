@@ -32,9 +32,10 @@ project "CSGForge-Editor"
         -- "libs/assimp/_config_headers",
         -- "libs/assimp/_config_headers/assimp"
         "libs/portable-file-dialogs",
+        "libs/stb",
     }
     files {"src/**.hpp", "src/**.cpp"}
-    links {"CSGForge-Core", "bgfx", "bimg", "bx", "glfw", "imgui", "cbop", "assimp", "pfd"}
+    links {"CSGForge-Core", "bgfx", "bimg", "bx", "glfw", "imgui", "cbop", "assimp", "pfd", "stb"}
     filter "system:linux"
 		links { "dl", "GL", "pthread", "X11" }
 
@@ -48,3 +49,4 @@ include "libs/bx.lua"
 include "libs/glfw.lua"
 include "libs/imgui.lua"
 include "libs/pfd.lua"
+include "libs/stb.lua"

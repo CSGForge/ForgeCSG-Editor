@@ -7,6 +7,7 @@
 #include <ImGuizmo/ImGuizmo.h>
 
 #include "../WorldManager.hpp"
+#include "../TextureManager.hpp"
 
 namespace ForgeEditor
 {
@@ -94,6 +95,7 @@ namespace ForgeEditor
         ImGui::SetCursorScreenPos(viewport_start_pos);
         auto dis_size = io->DisplaySize;
         auto uv1 = ImVec2(win_size.x / dis_size.x, 1.0f - win_size.y / dis_size.y);
+
         ImGui::Image((ImTextureID)(int64_t)bgfx::getTexture(mFramebufferHandle).idx, win_size, ImVec2(0, 1), uv1);
 
         // Draw guizmos
@@ -144,19 +146,28 @@ namespace ForgeEditor
         std::string labels[] = {"00", "01", "02", "03", "04"};
         std::string tooltips[] = {"View (Q)", "Move (W)", "Rotate (E)", "Scale (R)", "Transform (T)"};
         int guizmo_types[] = {-1, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::OPERATION::ROTATE, ImGuizmo::OPERATION::SCALE, ImGuizmo::OPERATION::UNIVERSAL};
+        auto texture = (ImTextureID)(int64_t)(&TextureManager::GetTextureManager())->GetTextureHandle("res/icons/ViewportTools.png").idx;
+        ImVec2 size = {24.f, 24.f};
         for (int i = 0; i < 5; i++)
         {
+            ImVec2 uv0 = {i / 5.f, 0.f};
+            ImVec2 uv1 = {(i + 1) / 5.f, 1.f};
             if (mGuizmoType == guizmo_types[i])
             {
                 auto colour = ImGui::GetStyle().Colors[ImGuiCol_SliderGrab];
                 ImGui::PushStyleColor(ImGuiCol_Button, colour);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colour);
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, colour);
-                ImGui::Button(labels[i].c_str());
+                ImGui::ImageButton(texture, size, uv0, uv1);
                 ImGui::PopStyleColor(3);
             }
-            else if (ImGui::Button(labels[i].c_str()))
-                mGuizmoType = guizmo_types[i];
+            else
+            {
+                ImGui::PushID((long)texture + i);
+                if (ImGui::ImageButton(texture, size, uv0, uv1))
+                    mGuizmoType = guizmo_types[i];
+                ImGui::PopID();
+            }
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip(tooltips[i].c_str());
         }

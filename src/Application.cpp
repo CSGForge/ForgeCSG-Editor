@@ -4,6 +4,7 @@
 
 #include "ImGuiManager.hpp"
 #include "WorldManager.hpp"
+#include "TextureManager.hpp"
 
 namespace ForgeEditor
 {
@@ -27,6 +28,7 @@ namespace ForgeEditor
 
     void Application::Run()
     {
+        auto texture_manager = TextureManager();
         auto world_manager = WorldManager();
         auto imgui_manager = ImGuiManager(mWindow->GetNativeWindow());
 
